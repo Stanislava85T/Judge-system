@@ -1,0 +1,3360 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGG Score – Администратор</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+:root {
+  --bg:#0d1117;--surface:#161b22;--card:#1f2937;--border:#30363d;
+  --accent:#7c3aed;--accent2:#a855f7;--gold:#f59e0b;--silver:#94a3b8;
+  --bronze:#b45309;--green:#10b981;--red:#ef4444;--blue:#3b82f6;
+  --teal:#14b8a6;--text:#e6edf3;--muted:#8b949e;--radius:13px;
+  --tv:#a16207;--av:#1e40af;--ava:#1e40af;--avb:#166534;--exe:#9d174d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-top{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:48px;gap:8px}
+.nav-logo{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;color:var(--accent2);white-space:nowrap}
+.nav-logo span{color:var(--gold)}
+.nav-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:0 8px 7px}
+.nav-tab{padding:7px 4px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;text-align:center;width:100%}
+.nav-tab.active{background:var(--accent);color:#fff}
+.nav-tab:hover:not(.active){background:var(--card);color:var(--text)}
+.nav-right{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-shrink:0}
+@media(max-width:599px){
+  .page{padding:12px}
+  .nav-tab-short{display:inline}
+  .nav-tab-full{display:none}
+}
+@media(min-width:600px){
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:56px}
+  .nav-top{padding:0;height:auto;flex:1}
+  .nav-tabs{display:flex;grid-template-columns:unset;padding:0;gap:2px;flex:0 0 auto}
+  .nav-tab{padding:6px 11px;font-size:12px;width:auto}
+  .nav-tab-short{display:none}
+  .nav-tab-full{display:inline}
+}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.page{display:none;padding:20px;max-width:1300px;margin:0 auto}
+.page.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.card-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--accent2);margin-bottom:14px;text-transform:uppercase}
+.btn{padding:9px 16px;border-radius:9px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent2)}
+.btn-gold{background:var(--gold);color:#000}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-sm{padding:5px 10px;font-size:11px;border-radius:7px}
+.btn-full{width:100%;justify-content:center}
+.btn:active{transform:scale(0.95)}
+input,select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 12px;font-size:14px;width:100%;outline:none;transition:border-color .2s}
+input:focus,select:focus{border-color:var(--accent)}
+label{font-size:10px;color:var(--muted);margin-bottom:3px;display:block;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.form-group{margin-bottom:11px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.banner{background:linear-gradient(135deg,rgba(124,58,237,.22),rgba(168,85,247,.08));border:1px solid var(--accent);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.banner .bl{font-size:10px;color:var(--accent2);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.banner .bn{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700}
+.banner .bs{font-size:11px;color:var(--muted);margin-top:1px}
+.sbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.si{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;flex:1;min-width:80px;text-align:center}
+.si .sv{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--accent2)}
+.si .sl{font-size:10px;color:var(--muted);margin-top:1px}
+/* JUDGE CHIPS */
+.chips-section{margin-bottom:14px}
+.chips-section-title{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;padding:3px 8px;border-radius:5px;display:inline-block}
+.chips-section-title.TV{background:rgba(202,138,4,.22);color:#fde047}
+.chips-section-title.AV{background:rgba(29,78,216,.22);color:#93c5fd}
+.chips-section-title.AVA{background:rgba(29,78,216,.22);color:#93c5fd}
+.chips-section-title.AVB{background:rgba(21,128,61,.22);color:#86efac}
+.chips-section-title.EXE{background:rgba(190,24,93,.22);color:#f9a8d4}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px;min-width:64px;text-align:center;transition:all .3s}
+.chip.ok{border-color:var(--green);background:rgba(16,185,129,.1)}
+.chip.pending{border-color:var(--border)}
+.chip .cr{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+.chip .cv{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700}
+.chip.ok .cv{color:var(--green)}
+.chip .ct{font-size:9px;color:var(--muted);margin-top:1px}
+/* SCOREBOARD */
+.team-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);transition:background .2s}
+.team-row:last-child{border-bottom:none}
+.team-row:hover{background:rgba(124,58,237,.06)}
+.team-row.active-team{background:rgba(245,158,11,.06);border-left:3px solid var(--gold)}
+.rank-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;flex-shrink:0}
+.r1{background:var(--gold);color:#000}.r2{background:var(--silver);color:#000}.r3{background:var(--bronze);color:#fff}.rn{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+.team-info{flex:1;min-width:0}
+.tn{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc{font-size:11px;color:var(--muted)}
+.score-cols{display:flex;gap:12px;flex-shrink:0}
+.sc{text-align:center;min-width:44px}
+.sc .sl{font-size:10px;color:var(--muted)}
+.sc .sv{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600}
+.sc .sv.tot{font-size:20px;color:var(--accent2)}
+/* START CONTROL */
+.start-big{text-align:center;padding:12px 0}
+.start-big .sb-lbl{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.start-big .sb-num{font-family:'Rajdhani',sans-serif;font-size:68px;font-weight:700;color:var(--gold);line-height:1}
+.start-big .sb-team{font-size:14px;color:var(--text);margin-top:3px;font-weight:600}
+.start-big .sb-cat{font-size:11px;color:var(--muted)}
+.start-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+/* Rotation tabs in control */
+.rot-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.rot-tab-btn{padding:7px 12px;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;text-align:left;flex:1;min-width:0}
+.rot-tab-btn.active{background:rgba(168,85,247,.15);border-color:var(--accent2);color:var(--accent2)}
+.rot-tab-btn .rtb-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rot-tab-btn .rtb-meta{font-size:10px;color:var(--muted);margin-top:2px;font-weight:400}
+.rot-tab-btn.active .rtb-meta{color:var(--accent)}
+/* Rotation accordion */
+.rot-section{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.rot-section-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;background:var(--surface);transition:background .15s;gap:8px}
+.rot-section-header:hover{background:var(--card)}
+.rot-section-header.open{background:rgba(168,85,247,.1);border-bottom:1px solid var(--border)}
+.rot-section-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px}
+.rot-section-body{display:none;padding:10px 12px}
+.rot-section-body.open{display:block}
+.rot-active-badge{background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
+.snb{border:none;border-radius:11px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center}
+.snb:active{transform:scale(0.94)}
+.snb-prev{background:var(--surface);color:var(--text);border:1px solid var(--border);font-size:16px}
+.snb-next{background:var(--accent);color:#fff;font-size:16px}
+.snb-center{background:var(--gold);color:#000;padding:10px 20px;font-size:13px}
+/* TLIST */
+.tli{display:flex;align-items:center;justify-content:space-between;padding:8px 11px;border:1px solid var(--border);border-radius:8px;margin-bottom:5px;background:var(--surface)}
+.tli.active{border-color:var(--gold);background:rgba(245,158,11,.06)}
+.tli .tln{font-size:13px;font-weight:600}
+.tli .tls{font-size:10px;color:var(--muted);margin-top:1px}
+.pill{display:inline-block;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:700}
+.pp{background:rgba(124,58,237,.2);color:var(--accent2)}
+.pg{background:rgba(245,158,11,.2);color:var(--gold)}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;align-items:center;justify-content:center}
+.modal-ov.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:22px;width:92%;max-width:460px;max-height:86vh;overflow-y:auto}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--accent2);margin-bottom:14px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.toast{position:fixed;bottom:18px;right:18px;background:var(--green);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;font-weight:600;z-index:300;transform:translateY(80px);opacity:0;transition:all .3s;max-width:280px;text-align:center}
+.toast.show{transform:translateY(0);opacity:1}
+hr{border:none;border-top:1px solid var(--border);margin:12px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.info-box{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);border-radius:10px;padding:12px;font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.info-box strong{color:var(--blue)}
+/* LIVE SCORES TABLE */
+.live-table{width:100%;border-collapse:collapse;font-size:13px}
+.live-table th{background:var(--surface);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.live-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.live-table tr:last-child td{border-bottom:none}
+.live-table tr:hover td{background:rgba(124,58,237,.05)}
+.live-table tr.active-row td{background:rgba(245,158,11,.05)}
+.score-cell{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;color:var(--green);white-space:nowrap}
+.score-cell.missing{color:var(--border);font-size:12px}
+.pdf-menu-item{width:100%;padding:10px 12px;background:transparent;border:none;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .15s;text-align:left;border-bottom:1px solid var(--border)}
+.pdf-menu-item:last-child{border-bottom:none}
+.pdf-menu-item:hover{background:rgba(124,58,237,.12)}
+.total-cell{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--accent2)}
+.total-cell.missing{color:var(--muted);font-size:12px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}.score-cols{gap:7px}}
+@media(max-width:700px){#page-control>[style*="grid-template-columns:1fr 1fr"]{display:block!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-top">
+    <div class="nav-logo">AGG<span>·</span>SCORE <span style="font-size:11px;color:var(--muted);font-weight:400;letter-spacing:0">ADMIN</span></div>
+    <div class="nav-right">
+      <div class="live-dot" id="sync-pulse" title="Синхронизация" style="transition:all .3s;opacity:.5"></div>
+      <span id="sync-badge" style="font-size:10px;cursor:pointer;white-space:nowrap" onclick="showPage('setup')" title="Настройки за синхронизация">🟡 Локален</span>
+      <span id="clock">--:--</span>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('control')">🎛 <span class="nav-tab-short">Контрол</span><span class="nav-tab-full">Контрол</span></button>
+    <button class="nav-tab" onclick="showPage('live')">📊 <span class="nav-tab-short">Live</span><span class="nav-tab-full">Live оценки</span></button>
+    <button class="nav-tab" onclick="showPage('scoreboard')">🏆 <span class="nav-tab-short">Клас.</span><span class="nav-tab-full">Класиране</span></button>
+    <button class="nav-tab" onclick="showPage('entries')">📝 <span class="nav-tab-short">Entries</span><span class="nav-tab-full">Entries</span></button>
+    <button class="nav-tab" onclick="showPage('history')">📚 <span class="nav-tab-short">История</span><span class="nav-tab-full">История</span></button>
+    <button class="nav-tab" onclick="showPage('setup')">⚙ <span class="nav-tab-short">Настр.</span><span class="nav-tab-full">Настройки</span></button>
+  </div>
+</nav>
+
+<!-- ═══════════════ CONTROL ═══════════════ -->
+<div class="page active" id="page-control">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start">
+
+    <!-- LEFT: rotation accordions -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--accent2);letter-spacing:1px">РОТАЦИИ</div>
+        <button class="btn btn-ghost btn-sm" onclick="printStartList()">🖨 Стартов лист</button>
+      </div>
+      <div id="ctrl-rotations-wrap">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;color:var(--muted);font-size:13px">
+          Няма ротации — генерирай жребий в <strong style="color:var(--text)">📝 Entries</strong>.
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: scores panel (sticky) + judge launcher -->
+    <div style="position:sticky;top:70px">
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title">📡 Оценки – <span id="ctrl-active-name" style="color:var(--text);font-weight:400;font-size:13px;text-transform:none;letter-spacing:0">изберете отбор</span></div>
+        <div id="ctrl-chips-wrap">
+          <p style="font-size:12px;color:var(--muted)">Кликнете върху отбор вляво</p>
+        </div>
+        <hr>
+        <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Резултат</div>
+            <div id="ctrl-total" style="font-family:'Rajdhani',sans-serif;font-size:42px;font-weight:700;color:var(--accent2)">—</div>
+          </div>
+          <div id="ctrl-breakdown" style="font-size:12px;color:var(--muted);line-height:2"></div>
+        </div>
+        <hr>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-green btn-sm" onclick="finalizeScore()">🏁 Финализирай</button>
+          <button class="btn btn-ghost btn-sm" onclick="resetTeamScores()">🗑 Изчисти</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🎯 Съдийски таблети</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.7">
+          Един QR код за всички — съдията го сканира и <strong style="color:var(--text)">сам избира</strong> типа и номера си на таблета.
+        </p>
+
+        <!-- ONE universal QR button -->
+        <button class="btn btn-gold btn-full" style="font-size:15px;padding:14px;margin-bottom:12px" onclick="showUniversalQR()">
+          📱 QR код за всички съдии
+        </button>
+
+        <hr style="margin:10px 0">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:8px">Или отвори конкретен съдия</div>
+        <div class="form-row" style="margin-bottom:8px">
+          <div class="form-group">
+            <label>Тип</label>
+            <select id="ctrl-judge-type" onchange="updateJudgeURL()">
+              <option value="TV">TV</option>
+              <option value="AV">AV</option>
+              <option value="AVA">AV-A</option>
+              <option value="AVB">AV-B</option>
+              <option value="EXE">EXE</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Съдия №</label>
+            <select id="ctrl-judge-num" onchange="updateJudgeURL()">
+              <option>1</option><option>2</option><option>3</option><option>4</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Трите имена (по желание)</label>
+          <input id="ctrl-judge-name" placeholder="Иванова Мария" oninput="updateJudgeURL()">
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
+          <div id="judge-url-display" style="font-size:10px;color:var(--muted);flex:1;word-break:break-all;font-family:monospace">—</div>
+          <button class="btn btn-ghost btn-sm" onclick="copyJudgeURL()" style="flex-shrink:0;padding:3px 7px;font-size:11px">📋</button>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="showJudgeQRManual()">📱 QR</button>
+          <button class="btn btn-primary btn-sm" style="flex:1" onclick="openJudgeTab()">🖥 Отвори тук</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ QR CODE MODAL ═══════ -->
+<div class="modal-ov" id="modal-qr">
+  <div class="modal" style="max-width:380px;text-align:center">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="modal-title" style="margin:0" id="qr-modal-title">📱 QR за съдии</div>
+      <button onclick="closeModal('modal-qr')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1">✕</button>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">
+      Сканирай с камерата на таблета → отваря се страница за избор на роля
+    </p>
+    <div id="qr-canvas-wrap" style="background:#fff;border-radius:14px;padding:18px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.15)">
+      <img id="qr-canvas" width="220" height="220" style="display:block;border-radius:6px">
+    </div>
+    <div id="qr-url-label" style="font-size:10px;color:var(--muted);word-break:break-all;font-family:monospace;margin-bottom:6px;padding:0 8px"></div>
+    <div id="qr-type-badge" style="margin-bottom:14px"></div>
+    <div class="modal-actions" style="justify-content:center;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-qr')">Затвори</button>
+      <button class="btn btn-primary btn-sm" onclick="copyJudgeURLFromModal()">📋 Копирай URL</button>
+    </div>
+  </div>
+</div>
+
+<!-- modal for start times -->
+<div class="modal-ov" id="modal-start-times">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-title">🕐 Начални часове по ротации</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Въведи начален час за всяка ротация (формат 09:00).</p>
+    <div id="start-times-inputs"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-start-times')">Отказ</button>
+      <button class="btn btn-primary" onclick="doGenerateStartList()">🖨 Генерирай PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ LIVE SCORES ═══════════════ -->
+<div class="page" id="page-live">
+  <div class="sbar">
+    <div class="si"><div class="sv" id="live-total">0</div><div class="sl">Отбора</div></div>
+    <div class="si"><div class="sv" id="live-scored">0</div><div class="sl">Оценени</div></div>
+    <div class="si"><div class="sv" id="live-pending">0</div><div class="sl">Чакат</div></div>
+    <div class="si"><div class="sv" id="live-active-num" style="color:var(--gold)">—</div><div class="sl">На мат №</div></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+      <div class="card-title" style="margin:0">Всички оценки в реално време</div>
+      <div style="display:flex;gap:8px">
+        <select id="live-cat-filter" style="width:auto" onchange="renderLive()">
+          <option value="">Всички категории</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" onclick="renderLive()">🔄</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="live-table" id="live-table">
+        <thead id="live-thead"></thead>
+        <tbody id="live-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SCOREBOARD ═══════════════ -->
+<div class="page" id="page-scoreboard">
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+    <select id="sb-cat" style="flex:1;width:auto" onchange="renderScoreboard()">
+      <option value="">Всички категории</option>
+    </select>
+    <button class="btn btn-ghost btn-sm" onclick="renderScoreboard()">🔄</button>
+    <button class="btn btn-gold btn-sm" onclick="exportResults()">📄 .txt</button>
+    <!-- PDF dropdown -->
+    <div style="position:relative;display:inline-block" id="pdf-dropdown-wrap">
+      <button class="btn btn-primary btn-sm" onclick="togglePdfMenu(event)" style="gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        PDF ▾
+      </button>
+      <div id="pdf-menu" style="display:none;position:fixed;background:var(--card);border:1px solid var(--border);border-radius:10px;min-width:240px;max-width:92vw;z-index:999;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5)">
+        <!-- Orientation -->
+        <div style="padding:8px 12px 4px;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border)">Формат</div>
+        <div style="padding:6px 8px;display:flex;gap:6px">
+          <button onclick="setPdfOri('portrait')" id="ori-portrait" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;border-color:var(--accent);color:var(--accent2)">⬜ A4 Портрет</button>
+          <button onclick="setPdfOri('landscape')" id="ori-landscape" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center">⬛ A4 Пейзаж</button>
+        </div>
+        <!-- Detail level -->
+        <div style="padding:8px 12px 4px;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border);border-top:1px solid var(--border)">Ниво на детайл</div>
+        <button class="pdf-menu-item" onclick="printResults('total')">
+          <span style="font-size:16px">📊</span>
+          <div><div style="font-weight:600;font-size:13px">Само тотал</div><div style="font-size:11px;color:var(--muted)">Крайна оценка на отбора</div></div>
+        </button>
+        <button class="pdf-menu-item" onclick="printResults('detail')">
+          <span style="font-size:16px">📋</span>
+          <div><div style="font-weight:600;font-size:13px">С детайлни оценки</div><div style="font-size:11px;color:var(--muted)">TV, AV/AV-A, AV-B, EXE средни</div></div>
+        </button>
+        <button class="pdf-menu-item" onclick="printResults('full')">
+          <span style="font-size:16px">🔍</span>
+          <div><div style="font-weight:600;font-size:13px">Всички съдии</div><div style="font-size:11px;color:var(--muted)">Оценка от всеки съдия поотделно</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:12px 16px 0;display:flex;justify-content:space-between;align-items:center">
+      <div class="card-title" style="margin:0">Класация</div>
+      <div id="sb-col-h" style="display:flex;gap:12px;font-size:10px;color:var(--muted)"></div>
+    </div>
+    <div id="sb-list"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SETUP ═══════════════ -->
+<div class="page" id="page-setup">
+  <div class="grid2">
+    <div>
+      <div class="card">
+        <div class="card-title">📋 Турнир</div>
+        <div class="form-group"><label>Наименование</label><input id="comp-name" placeholder="Купа България 2025"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Дата</label><input type="date" id="comp-date"></div>
+          <div class="form-group"><label>Място</label><input id="comp-place" placeholder="НСА, София"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveCompInfo()">💾 Запази турнира</button>
+      </div>
+      <div class="card" style="border-color:rgba(59,130,246,.4)">
+        <div class="card-title">🔗 Синхронизация</div>
+        <div id="sync-status-card" style="margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px">
+            <div style="font-size:22px" id="sync-icon-big">🟡</div>
+            <div>
+              <div style="font-size:13px;font-weight:600" id="sync-mode-label">Локален режим</div>
+              <div style="font-size:11px;color:var(--muted)" id="sync-mode-desc">Само на този компютър</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WiFi Server info -->
+        <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.8">
+          <strong style="color:var(--green)">🟢 WiFi режим (без интернет)</strong><br>
+          <span style="color:var(--muted)">1. Инсталирай Node.js от </span><a href="https://nodejs.org" target="_blank" style="color:var(--blue)">nodejs.org</a><br>
+          <span style="color:var(--muted)">2. В папката с файловете: </span><code style="background:var(--card);padding:1px 5px;border-radius:4px;color:var(--text)">npm install</code><br>
+          <span style="color:var(--muted)">3. Стартирай: </span><code style="background:var(--card);padding:1px 5px;border-radius:4px;color:var(--text)">node server.js</code><br>
+          <span style="color:var(--muted)">4. Отвори </span><code style="background:var(--card);padding:1px 5px;border-radius:4px;color:var(--text)">http://IP:3000</code><span style="color:var(--muted)"> на таблетите (IP се показва в конзолата)</span>
+        </div>
+
+        <!-- Supabase settings -->
+        <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.8">
+          <strong style="color:var(--blue)">🔵 Cloud режим (5G/интернет) — Supabase</strong><br>
+          <span style="color:var(--muted)">Създай проект на </span><a href="https://supabase.com" target="_blank" style="color:var(--blue)">supabase.com</a>
+          <span style="color:var(--muted)"> и изпълни SQL-а по-долу, след което въведи URL и ключа.</span>
+        </div>
+
+        <div class="form-group">
+          <label>Supabase Project URL</label>
+          <input id="sb-url" placeholder="https://xxxxx.supabase.co" style="font-size:12px">
+        </div>
+        <div class="form-group">
+          <label>Supabase anon key</label>
+          <input id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp..." style="font-size:12px">
+        </div>
+        <div class="form-group">
+          <label>Judge URL (URL на agg-judge.html за таблетите)</label>
+          <input id="judge-url-override" placeholder="https://stanislava85t.github.io/Judge-system/agg-judge.html" style="font-size:12px">
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Въведи точния URL — ще се използва за QR кодовете</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <button class="btn btn-blue" onclick="saveSyncSettings()" style="flex:1">💾 Свържи Supabase</button>
+          <button class="btn btn-ghost btn-sm" onclick="clearSyncSettings()" style="color:var(--red)">✕ Изключи</button>
+        </div>
+
+        <!-- SQL to run in Supabase -->
+        <details style="margin-top:4px">
+          <summary style="font-size:11px;color:var(--muted);cursor:pointer;padding:4px 0">📋 SQL за Supabase (кликни за да видиш)</summary>
+          <pre style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:10px;color:var(--text);margin-top:8px;overflow-x:auto;white-space:pre-wrap">create table if not exists agg_scores (
+  id text primary key default gen_random_uuid()::text,
+  team_id text not null,
+  judge_key text not null,
+  value float not null,
+  comp_key text default 'default',
+  updated_at timestamptz default now(),
+  unique(team_id, judge_key, comp_key)
+);
+create table if not exists agg_state (
+  key text primary key,
+  data jsonb,
+  updated_at timestamptz default now()
+);
+alter table agg_scores enable row level security;
+alter table agg_state enable row level security;
+create policy "public rw scores" on agg_scores for all using (true) with check (true);
+create policy "public rw state" on agg_state for all using (true) with check (true);</pre>
+        </details>
+      </div>
+        <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:9px;padding:11px;font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7">
+          <strong style="color:var(--blue)">Как работи:</strong> Запази данните като <code style="background:var(--surface);padding:1px 5px;border-radius:4px">.json</code> файл на компютъра.
+          На друго устройство — отвори <code style="background:var(--surface);padding:1px 5px;border-radius:4px">agg-admin.html</code> и зареди същия файл.
+          Всички отбори, оценки и стартов ред ще бъдат възстановени.
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <button class="btn btn-green" onclick="exportJSON()" style="flex:1">
+            📥 Запази (.json)
+          </button>
+          <button class="btn btn-blue" onclick="document.getElementById('import-file').click()" style="flex:1">
+            📤 Зареди (.json)
+          </button>
+          <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+        </div>
+        <div id="import-status" style="display:none;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:10px"></div>
+        <hr style="margin:10px 0">
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="resetAll()" style="color:var(--red);border-color:var(--red)">🔴 Нулирай всичко</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title">🎀 Добави отбор</div>
+        <div class="form-group"><label>Наименование</label><input id="team-name" placeholder="СК Академик – А"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Клуб / Държава</label><input id="team-club" placeholder="НСА, България"></div>
+          <div class="form-group">
+            <label>Категория</label>
+            <select id="team-cat">
+              <option value="6-8">6 – 8 години</option>
+              <option value="8-10">8 – 10 години</option>
+              <option value="10-12">10 – 12 години</option>
+              <option value="12-14">12 – 14 години</option>
+              <option value="Девойки">Девойки</option>
+              <option value="Жени">Жени</option>
+              <option value="Open">Open</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Стартов №</label><input type="number" id="team-order" placeholder="1" min="1"></div>
+          <div class="form-group"><label>Гимнастички</label><input type="number" id="team-gymnasts" placeholder="6" min="6" max="10"></div>
+        </div>
+        <button class="btn btn-gold" onclick="addTeam()">➕ Добави отбор</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Отбори (<span id="team-count-lbl">0</span>)</div>
+        <div id="team-list" style="max-height:300px;overflow-y:auto"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ ENTRIES ═══════════════ -->
+<div class="page" id="page-entries">
+  <div class="grid2">
+
+    <!-- LEFT: new entry form + import -->
+    <div>
+      <div class="card">
+        <div class="card-title">📝 Нова заявка (Entry)</div>
+        <div class="form-group"><label>Наименование на отбора</label><input id="e-name" placeholder="СК Академик – А"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Клуб</label><input id="e-club" placeholder="НСА"></div>
+          <div class="form-group"><label>Държава</label><input id="e-country" placeholder="България"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Категория</label>
+            <select id="e-cat">
+              <option value="6-8">6 – 8 години</option>
+              <option value="8-10">8 – 10 години</option>
+              <option value="10-12">10 – 12 години</option>
+              <option value="12-14">12 – 14 години</option>
+              <option value="Девойки">Девойки</option>
+              <option value="Жени">Жени</option>
+              <option value="Open">Open</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Брой гимнастички</label><input type="number" id="e-gymnasts" placeholder="6" min="6" max="10"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Треньор</label><input id="e-coach" placeholder="Петрова Анна"></div>
+          <div class="form-group"><label>Телефон / Email</label><input id="e-contact" placeholder="+359..."></div>
+        </div>
+        <div class="form-group"><label>Бележка</label><input id="e-note" placeholder="По желание..."></div>
+        <button class="btn btn-gold" onclick="addEntry()">➕ Добави заявка</button>
+      </div>
+
+      <div class="card" style="border-color:rgba(168,85,247,.35)">
+        <div class="card-title">⚡ Импорт от файл</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.7">
+          Качи <strong style="color:var(--text)">Excel</strong>, <strong style="color:var(--text)">CSV</strong> или <strong style="color:var(--text)">PDF</strong> — системата автоматично разпознава колоните.
+        </p>
+        <div id="import-dropzone"
+          style="border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px"
+          onclick="document.getElementById('import-file-input').click()"
+          ondragover="importDragOver(event)" ondragleave="importDragLeave(event)" ondrop="importDrop(event)">
+          <div style="font-size:26px;margin-bottom:4px">📂</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text)">Кликни или плъзни файл тук</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">.xlsx · .xls · .csv · .pdf</div>
+        </div>
+        <input type="file" id="import-file-input" accept=".xlsx,.xls,.csv,.pdf" style="display:none" onchange="handleImportFile(event)">
+        <div style="background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:8px">
+          <strong style="color:var(--blue)">Разпознавани колони:</strong>
+          Наименование / Отбор / Name · Категория / Age · Клуб / Club · Държава / Country · Гимнастички · Треньор / Coach
+        </div>
+        <div id="import-status-bar" style="display:none"></div>
+      </div>
+      <div id="import-preview-area" style="display:none"></div>
+    </div>
+
+    <!-- RIGHT: entries list + rotations & pauses -->
+    <div>
+      <div class="card">
+        <div class="card-title">📋 Заявки (<span id="entry-count-lbl">0</span>)</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+          <select id="entry-cat-filter" style="flex:1;width:auto" onchange="renderEntries()">
+            <option value="">Всички категории</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="renderEntries()">🔄</button>
+        </div>
+        <div id="entry-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔄 Ротации & паузи</div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.7">
+          Наредени блокове — ротации и паузи могат да се добавят, местят и изтриват свободно.
+          Жребият се тегли поотделно за всяка ротация.
+        </p>
+
+        <div id="rotation-list" style="margin-bottom:12px"></div>
+
+        <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:12px;margin-bottom:8px">
+          <div style="font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">➕ Нова ротация</div>
+          <div class="form-group">
+            <label>Наименование</label>
+            <input id="rot-name" placeholder="Ротация 1 / Сутринта / Финали">
+          </div>
+          <div class="form-group">
+            <label>Включени категории (Ctrl = повече)</label>
+            <select id="rot-cats" multiple style="height:110px"></select>
+          </div>
+          <button class="btn btn-primary btn-sm btn-full" onclick="addRotation()">➕ Добави ротация</button>
+        </div>
+
+        <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:12px;margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">⏸ Нова пауза</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Продължителност (мин)</label>
+              <input type="number" id="pause-minutes" placeholder="15" min="1" value="15">
+            </div>
+            <div class="form-group">
+              <label>Описание</label>
+              <input id="pause-note" placeholder="Обедна почивка">
+            </div>
+          </div>
+          <button class="btn btn-gold btn-sm btn-full" onclick="addPause()">⏸ Добави пауза</button>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+          <button class="btn btn-primary" onclick="generateDraw()">🎲 Генерирай жребий</button>
+          <button class="btn btn-ghost btn-sm" onclick="renderDrawPreview()">👁 Преглед</button>
+          <button class="btn btn-ghost btn-sm" onclick="clearRotations()" style="color:var(--red)">🗑 Изчисти</button>
+        </div>
+        <div id="draw-preview"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ HISTORY ═══════════════ -->
+<div class="page" id="page-history">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+    <div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--accent2)">📚 История на турнирите</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">Архив на всички финализирани турнири</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-gold btn-sm" onclick="archiveCurrentTournament()">📦 Архивирай текущия турнир</button>
+      <button class="btn btn-ghost btn-sm" onclick="renderHistory()">🔄</button>
+    </div>
+  </div>
+  <div id="history-list"></div>
+</div>
+
+<!-- ═══════ EDIT ROTATION MODAL ═══════ -->
+<div class="modal-ov" id="modal-edit-rotation">
+  <div class="modal" style="max-width:520px;width:96vw;max-height:90vh">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="modal-title" style="margin:0" id="edit-rot-title">Редактиране на ротация</div>
+      <button onclick="closeModal('modal-edit-rotation')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1">✕</button>
+    </div>
+
+    <!-- Name -->
+    <div class="form-group">
+      <label>Наименование</label>
+      <input id="edit-rot-name" placeholder="Ротация 1">
+    </div>
+
+    <!-- Categories -->
+    <div class="form-group">
+      <label>Включени категории (Ctrl = повече)</label>
+      <select id="edit-rot-cats" multiple style="height:100px"></select>
+    </div>
+
+    <!-- Teams order (if draw already generated) -->
+    <div id="edit-rot-teams-section" style="display:none">
+      <div style="font-size:11px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-top:4px;border-top:1px solid var(--border)">
+        Отбори в стартовия ред — пренареди с ▲▼
+      </div>
+      <div id="edit-rot-teams-list" style="max-height:280px;overflow-y:auto"></div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="closeModal('modal-edit-rotation')">Отказ</button>
+      <button class="btn btn-primary" onclick="saveEditRotation()">✅ Запази</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ IMPORT PREVIEW MODAL ═══════ -->
+<div class="modal-ov" id="modal-import">
+  <div class="modal" style="max-width:700px;width:96vw;max-height:90vh">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="modal-title" style="margin:0">📋 Преглед на импорта</div>
+      <button onclick="closeModal('modal-import')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <div id="import-summary" style="font-size:12px;color:var(--muted);margin-bottom:12px"></div>
+    <div style="overflow-y:auto;max-height:55vh;margin-bottom:12px">
+      <table style="width:100%;border-collapse:collapse;font-size:12px" id="import-preview-table">
+        <thead id="import-preview-head"></thead>
+        <tbody id="import-preview-body"></tbody>
+      </table>
+    </div>
+    <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.25);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);margin-bottom:12px">
+      ✏️ Провери категориите — кликни върху клетка за да я промениш. Редове с ❌ ще бъдат пропуснати.
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-import')">Отказ</button>
+      <button class="btn btn-primary" onclick="confirmImport()">✅ Импортирай всички</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ EDIT SCORE MODAL ═══════ -->
+<div class="modal-ov" id="modal-edit-score">
+  <div class="modal" style="max-width:400px;width:96vw">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="modal-title" style="margin:0" id="edit-modal-title">Редактиране на оценка</div>
+      <button onclick="closeModal('modal-edit-score')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1">✕</button>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--muted);line-height:1.7">
+      <div id="edit-modal-info"></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Текуща</span>
+      <span id="edit-current-val" style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--muted)">—</span>
+    </div>
+    <!-- big display -->
+    <div style="background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:14px;text-align:center;margin-bottom:12px">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px">Нова оценка</div>
+      <div id="edit-new-val" style="font-family:'Rajdhani',sans-serif;font-size:64px;font-weight:700;color:var(--accent2);line-height:1.05">0.000</div>
+      <div id="edit-max-lbl" style="font-size:11px;color:var(--muted)">Максимум: 10.000</div>
+    </div>
+    <!-- keyboard hint -->
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-bottom:8px">⌨️ Можеш да въвеждаш и от клавиатурата · Enter = Запази · Esc = Отказ</div>
+    <!-- bigger numpad -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px" id="edit-numpad"></div>
+    <div class="modal-actions" style="gap:8px">
+      <button class="btn btn-ghost" onclick="closeModal('modal-edit-score')">Отказ</button>
+      <button class="btn btn-danger btn-sm" onclick="clearEditScore()">🗑 Изчисти</button>
+      <button class="btn btn-green" onclick="saveEditScore()">✅ Запази</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// STORAGE KEY
+const SK = 'agg_state_v3';
+
+// ═══════════════════════════════════════
+// DEFAULT STATE
+function defaultState(){
+  return {
+    compName:'', compDate:'', compPlace:'',
+    teams:[],
+    scores:{},
+    finalized:{},
+    activeStart:null,
+    entries:[],
+    rotations:[],
+  };
+}
+
+const HK='agg_history_v1';
+function loadHistory(){ try{ const r=localStorage.getItem(HK); return r?JSON.parse(r):[]; }catch(e){ return []; } }
+function saveHistory(h){ localStorage.setItem(HK,JSON.stringify(h)); }
+
+// ═══════════════════════════════════════
+// HYBRID SYNC ENGINE
+// Priority: 1) WebSocket (local server)  2) Supabase (cloud)  3) localStorage (offline)
+// ═══════════════════════════════════════
+const SYNC = {
+  mode: 'local',      // 'ws' | 'supabase' | 'local'
+  ws: null,
+  wsConnected: false,
+  sbClient: null,
+  sbChannel: null,
+  supabaseUrl: '',
+  supabaseKey: '',
+};
+
+// Load Supabase credentials from localStorage
+function loadSyncConfig(){
+  try{
+    const cfg=JSON.parse(localStorage.getItem('agg_sync_cfg')||'{}');
+    SYNC.supabaseUrl=cfg.url||'';
+    SYNC.supabaseKey=cfg.key||'';
+  }catch(e){}
+}
+function saveSyncConfig(url,key){
+  localStorage.setItem('agg_sync_cfg',JSON.stringify({url,key}));
+  SYNC.supabaseUrl=url;
+  SYNC.supabaseKey=key;
+}
+
+// ── WebSocket (local WiFi server) ─────────────────────────────────────
+function connectWS(){
+  // Try connecting to local server on same host (when served via node server.js)
+  const wsUrl = location.protocol==='file:'
+    ? null
+    : `ws://${location.hostname}:${location.port||3000}`;
+  if(!wsUrl) return;
+
+  try{
+    const ws=new WebSocket(wsUrl);
+    SYNC.ws=ws;
+
+    ws.onopen=()=>{
+      SYNC.wsConnected=true;
+      SYNC.mode='ws';
+      updateSyncBadge();
+      console.log('[SYNC] WebSocket connected →', wsUrl);
+    };
+
+    ws.onmessage=(e)=>{
+      try{
+        const msg=JSON.parse(e.data);
+        if(msg.type==='INIT'||msg.type==='STATE_UPDATE'){
+          const fresh={...defaultState(),...msg.state};
+          S.scores=fresh.scores||{};
+          if(msg.type==='INIT'){
+            // Full state sync on connect
+            Object.assign(S,fresh);
+            localStorage.setItem(SK,JSON.stringify(S));
+            renderAll();
+          } else {
+            S.scores=fresh.scores||{};
+            renderCurrentChips();
+            renderLive();
+          }
+        } else if(msg.type==='SCORE'){
+          if(!S.scores[msg.teamId]) S.scores[msg.teamId]={};
+          S.scores[msg.teamId][msg.judgeKey]=msg.value;
+          localStorage.setItem(SK,JSON.stringify(S));
+          renderCurrentChips();
+          renderLive();
+          showSyncPulse();
+        } else if(msg.type==='ACTIVE_START'){
+          S.activeStart=msg.activeStart;
+          renderCtrlRotations();
+          updateCtrlDisplay();
+        }
+      }catch(err){ console.error('[WS msg]',err); }
+    };
+
+    ws.onclose=()=>{
+      SYNC.wsConnected=false;
+      if(SYNC.mode==='ws') SYNC.mode=SYNC.supabaseUrl?'supabase':'local';
+      updateSyncBadge();
+      // Retry after 3s
+      setTimeout(connectWS, 3000);
+    };
+
+    ws.onerror=()=>{ ws.close(); };
+  }catch(e){ console.log('[WS] не е достъпен'); }
+}
+
+// ── Supabase (cloud, 5G) ──────────────────────────────────────────────
+function connectSupabase(){
+  if(!SYNC.supabaseUrl||!SYNC.supabaseKey) return;
+
+  // Load Supabase JS
+  if(!window.supabase){
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+    s.onload=()=>_initSupabase();
+    document.head.appendChild(s);
+  } else { _initSupabase(); }
+}
+
+function _initSupabase(){
+  try{
+    SYNC.sbClient=window.supabase.createClient(SYNC.supabaseUrl, SYNC.supabaseKey);
+
+    // Subscribe to realtime score updates
+    SYNC.sbChannel=SYNC.sbClient
+      .channel('agg-realtime')
+      .on('postgres_changes',{event:'*',schema:'public',table:'agg_scores'},
+        (payload)=>{
+          const row=payload.new;
+          if(!row||!row.team_id||!row.judge_key) return;
+          if(!S.scores[row.team_id]) S.scores[row.team_id]={};
+          S.scores[row.team_id][row.judge_key]=row.value;
+          localStorage.setItem(SK,JSON.stringify(S));
+          renderCurrentChips();
+          renderLive();
+          showSyncPulse();
+        }
+      )
+      .on('postgres_changes',{event:'*',schema:'public',table:'agg_state'},
+        (payload)=>{
+          const row=payload.new;
+          // Judge submitted via Supabase — scores already handled above
+          // activeStart changed by another admin instance
+          if(row?.key==='activeStart'){
+            S.activeStart=row.data?.v;
+            renderCtrlRotations();
+            updateCtrlDisplay();
+          }
+        }
+      )
+      .subscribe((status)=>{
+        if(status==='SUBSCRIBED'){
+          if(!SYNC.wsConnected){ SYNC.mode='supabase'; updateSyncBadge(); }
+          console.log('[SYNC] Supabase connected');
+          _loadScoresFromSupabase();
+          // Push current state so judges can read it
+          pushStateToSupabase();
+        }
+      });
+  }catch(e){ console.error('[Supabase]',e); }
+}
+
+async function _loadScoresFromSupabase(){
+  if(!SYNC.sbClient) return;
+  const {data}=await SYNC.sbClient.from('agg_scores').select('*');
+  if(data){
+    data.forEach(row=>{
+      if(!S.scores[row.team_id]) S.scores[row.team_id]={};
+      S.scores[row.team_id][row.judge_key]=row.value;
+    });
+    localStorage.setItem(SK,JSON.stringify(S));
+    renderCurrentChips();
+    renderLive();
+  }
+}
+
+// ── Save / Load ───────────────────────────────────────────────────────
+function loadState(){
+  try{
+    const raw=localStorage.getItem(SK);
+    if(raw) return {...defaultState(),...JSON.parse(raw)};
+  }catch(e){}
+  return defaultState();
+}
+
+function saveState(){
+  localStorage.setItem(SK,JSON.stringify(S));
+  // Broadcast to WS server
+  if(SYNC.wsConnected && SYNC.ws?.readyState===1){
+    SYNC.ws.send(JSON.stringify({type:'STATE_UPDATE', state:S}));
+  }
+  // Push to Supabase (debounced)
+  if(SYNC.sbClient){
+    clearTimeout(SYNC._sbSaveTimer);
+    SYNC._sbSaveTimer=setTimeout(()=>pushStateToSupabase(), 800);
+  }
+}
+
+// Called when admin changes active start
+function broadcastActiveStart(n){
+  if(SYNC.wsConnected && SYNC.ws?.readyState===1){
+    SYNC.ws.send(JSON.stringify({type:'ACTIVE_START', activeStart:n}));
+  }
+  if(SYNC.sbClient){
+    // Update activeStart
+    SYNC.sbClient.from('agg_state').upsert({key:'activeStart',data:{v:n}},{onConflict:'key'});
+    // Also push full state so judge has teams list
+    SYNC.sbClient.from('agg_state').upsert({key:'fullState',data:S},{onConflict:'key'});
+  }
+}
+
+// Push full state to Supabase (called on major changes)
+async function pushStateToSupabase(){
+  if(!SYNC.sbClient) return;
+  await SYNC.sbClient.from('agg_state').upsert({key:'fullState',data:S},{onConflict:'key'});
+}
+
+// ── Sync badge UI ─────────────────────────────────────────────────────
+function updateSyncBadge(){
+  const badge=document.getElementById('sync-badge');
+  if(!badge) return;
+  const icons={ws:'🟢 WiFi сървър', supabase:'🔵 Supabase', local:'🟡 Локален'};
+  badge.textContent=icons[SYNC.mode]||'🟡';
+  badge.style.color=SYNC.mode==='local'?'var(--gold)':SYNC.mode==='ws'?'var(--green)':'var(--blue)';
+}
+
+function showSyncPulse(){
+  const dot=document.getElementById('sync-pulse');
+  if(!dot) return;
+  dot.style.opacity='1';
+  dot.style.transform='scale(1.4)';
+  setTimeout(()=>{ dot.style.opacity='.5'; dot.style.transform='scale(1)'; },400);
+}
+
+let S=loadState();
+
+// Start sync
+loadSyncConfig();
+connectWS();
+connectSupabase();
+
+// ═══════════════════════════════════════
+// SCORE CONFIG
+const SCORE_CFG={
+  TV: {max:10,label:'TV',   judges:4, compute:avg},
+  AV: {max:10,label:'AV',  judges:4, compute:avg},
+  AVA:{max:5, label:'AV-A',judges:4, compute:avg},
+  AVB:{max:5, label:'AV-B',judges:4, compute:avg},
+  EXE:{max:10,label:'EXE', judges:4, compute:vals=>vals.length>=3?avg(dropMinMax(vals)):avg(vals)},
+};
+const SENIOR_CATS=['Девойки','Жени'];
+function getCatProfile(cat){return SENIOR_CATS.includes(cat)?['TV','AVA','AVB','EXE']:['TV','AV','EXE'];}
+function avg(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:0;}
+function dropMinMax(a){const s=[...a].sort((x,y)=>x-y);return s.slice(1,-1);}
+function fmt(v){return(v!==null&&v!==undefined)?v.toFixed(3):'—';}
+
+// ═══════════════════════════════════════
+// CLOCK
+setInterval(()=>{
+  const n=new Date();
+  document.getElementById('clock').textContent=
+    String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+},1000);
+
+// ═══════════════════════════════════════
+// LISTEN FOR JUDGE SCORE UPDATES (localStorage fallback)
+window.addEventListener('storage',e=>{
+  if(e.key===SK && SYNC.mode==='local'){
+    const fresh=loadState();
+    S.scores=fresh.scores;
+    renderCurrentChips();
+    renderLive();
+  }
+});
+
+// Polling fallback – local only
+setInterval(()=>{
+  if(SYNC.mode!=='local') return;
+  const fresh=loadState();
+  if(JSON.stringify(fresh.scores)!==JSON.stringify(S.scores)){
+    S.scores=fresh.scores;
+    renderCurrentChips();
+    renderLive();
+  }
+},2000);
+
+// ═══════════════════════════════════════
+// PAGE NAV
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  ['control','live','scoreboard','entries','history','setup'].forEach((n,i)=>{
+    if(n===id) document.querySelectorAll('.nav-tab')[i].classList.add('active');
+  });
+  if(id==='scoreboard'){updateSelects();renderScoreboard();}
+  if(id==='live'){updateSelects();renderLive();}
+  if(id==='control'){renderCtrlRotations();renderCurrentChips();}
+  if(id==='entries'){renderEntries();renderRotationList();renderRotationCatSelect();renderDrawPreview();}
+  if(id==='history') renderHistory();
+}
+
+// ═══════════════════════════════════════
+// TOAST
+function toast(msg,color='var(--green)'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=color;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// ═══════════════════════════════════════
+// SETUP
+function saveSyncSettings(){
+  const url=document.getElementById('sb-url').value.trim();
+  const key=document.getElementById('sb-key').value.trim();
+  const judgeUrl=document.getElementById('judge-url-override').value.trim();
+  if(!url||!key){toast('⚠️ Въведи и URL и key','var(--red)');return;}
+  saveSyncConfig(url,key);
+  if(judgeUrl) localStorage.setItem('agg_judge_url_override', judgeUrl);
+  else localStorage.removeItem('agg_judge_url_override');
+  connectSupabase();
+  toast('🔵 Supabase конфигуриран — свързване…','var(--blue)');
+  setTimeout(updateSyncBadge,2000);
+}
+
+function clearSyncSettings(){
+  localStorage.removeItem('agg_sync_cfg');
+  localStorage.removeItem('agg_judge_url_override');
+  SYNC.supabaseUrl=''; SYNC.supabaseKey='';
+  if(SYNC.sbChannel) SYNC.sbChannel.unsubscribe();
+  SYNC.sbChannel=null; SYNC.sbClient=null;
+  if(!SYNC.wsConnected) SYNC.mode='local';
+  updateSyncBadge();
+  document.getElementById('judge-url-override').value='';
+  toast('✕ Supabase изключен');
+}
+
+function updateSyncBadge(){
+  const badge=document.getElementById('sync-badge');
+  const icon=document.getElementById('sync-icon-big');
+  const label=document.getElementById('sync-mode-label');
+  const desc=document.getElementById('sync-mode-desc');
+  const map={
+    ws:       {icon:'🟢',label:'WiFi сървър',desc:'Локална мрежа — работи без интернет',color:'var(--green)'},
+    supabase: {icon:'🔵',label:'Supabase Cloud',desc:'5G/интернет — оценките идват в реално време',color:'var(--blue)'},
+    local:    {icon:'🟡',label:'Локален режим',desc:'Само на този компютър — таблетите не могат да изпращат',color:'var(--gold)'},
+  };
+  const m=map[SYNC.mode]||map.local;
+  if(badge){ badge.textContent=m.icon+' '+m.label; badge.style.color=m.color; }
+  if(icon)  icon.textContent=m.icon;
+  if(label){ label.textContent=m.label; label.style.color=m.color; }
+  if(desc)  desc.textContent=m.desc;
+}
+
+function saveCompInfo(){
+  S.compName=document.getElementById('comp-name').value;
+  S.compDate=document.getElementById('comp-date').value;
+  S.compPlace=document.getElementById('comp-place').value;
+  saveState();toast('✅ Запазено');
+}
+
+function addTeam(){
+  const name=document.getElementById('team-name').value.trim();
+  const club=document.getElementById('team-club').value.trim();
+  const cat=document.getElementById('team-cat').value;
+  const order=parseInt(document.getElementById('team-order').value)||(S.teams.length+1);
+  if(!name){toast('⚠️ Въведете наименование','var(--red)');return;}
+  const id='t'+Date.now();
+  S.teams.push({id,name,club,cat,order});
+  S.teams.sort((a,b)=>a.order-b.order);
+  if(!S.scores[id]) S.scores[id]={};
+  saveState();
+  renderTeamList();updateSelects();renderStartOrderList();
+  document.getElementById('team-name').value='';
+  document.getElementById('team-order').value='';
+  toast('✅ '+name);
+}
+
+function removeTeam(id){
+  if(!confirm('Изтриване?'))return;
+  S.teams=S.teams.filter(t=>t.id!==id);
+  delete S.scores[id];delete S.finalized[id];
+  saveState();renderTeamList();updateSelects();renderStartOrderList();
+}
+
+function renderTeamList(){
+  const realTeams=S.teams.filter(t=>!t.isPause);
+  document.getElementById('team-count-lbl').textContent=realTeams.length;
+  const el=document.getElementById('team-list');
+  if(!S.teams.length){el.innerHTML='<p style="color:var(--muted);font-size:12px">Няма отбори</p>';return;}
+  el.innerHTML=S.teams.sort((a,b)=>a.order-b.order).map(t=>{
+    if(t.isPause) return `<div class="tli" style="background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.3)">
+      <div><div class="tln" style="color:var(--gold)">${t.order}. ${t.name}</div></div>
+    </div>`;
+    return `<div class="tli ${t.order===S.activeStart?'active':''}">
+      <div><div class="tln">${t.order}. ${t.name}</div>
+      <div class="tls">${t.club} · <span class="pill pp">${t.cat}</span></div></div>
+      <button class="btn btn-danger btn-sm" onclick="removeTeam('${t.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function updateSelects(){
+  const cats=[...new Set(S.teams.filter(t=>!t.isPause).map(t=>t.cat))].sort();
+  ['sb-cat','live-cat-filter'].forEach(elId=>{
+    const sel=document.getElementById(elId);
+    if(!sel) return;
+    const prev=sel.value;
+    sel.innerHTML='<option value="">Всички категории</option>'+
+      cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    // restore previous selection if still valid
+    if(cats.includes(prev)) sel.value=prev;
+  });
+}
+
+function renderStartOrderList(){
+  const el=document.getElementById('start-order-list');
+  if(!S.teams.length){el.innerHTML='<p style="color:var(--muted);font-size:12px">Няма отбори</p>';return;}
+  el.innerHTML=S.teams.sort((a,b)=>a.order-b.order).map(t=>{
+    if(t.isPause) return `<div class="tli" style="background:rgba(245,158,11,.06);border-color:rgba(245,158,11,.25);cursor:default">
+      <div><div class="tln" style="color:var(--gold);font-size:12px">${t.order}. ${t.name}</div></div>
+    </div>`;
+    const isActive=t.order===S.activeStart;
+    const isFin=S.finalized[t.id];
+    const res=calcScore(t.id);
+    const hasScore=res?.total!==null;
+    return `<div class="tli ${isActive?'active':''}" style="cursor:pointer" onclick="setStart(${t.order})">
+      <div>
+        <div class="tln">${isActive?'▶ ':''}<strong>${t.order}.</strong> ${t.name}</div>
+        <div class="tls">${t.cat}${isFin?' · <span style="color:var(--green)">✓ Финализиран</span>':hasScore?' · <span style="color:var(--accent2)">'+fmt(res.total)+'</span>':''}</div>
+      </div>
+      ${isActive?'<span class="pill pg">НА МАТ</span>':''}
+    </div>`;
+  }).join('');
+}
+
+function resetAll(){
+  if(!confirm('ВНИМАНИЕ! Нулиране на ВСИЧКО (entries, отбори, оценки)?'))return;
+  Object.assign(S,defaultState());
+  saveState();
+  renderAll();
+  toast('🔴 Нулирано','var(--red)');
+}
+
+// ═══════════════════════════════════════
+// START CONTROL
+function teamByOrder(n){return S.teams.find(t=>t.order===n&&!t.isPause)||null;}
+function currentTeam(){return S.activeStart?teamByOrder(S.activeStart):null;}
+
+function setStart(n){
+  const t=S.teams.find(x=>x.order===n);
+  if(t?.isPause) return;
+  S.activeStart=n;
+  saveState();
+  broadcastActiveStart(n);
+  updateCtrlDisplay();
+  renderCurrentChips();
+  renderStartOrderList();
+  renderTeamList();
+  toast('▶ Стартов № '+n);
+}
+
+function changeStart(delta){
+  const orders=S.teams.filter(t=>!t.isPause).map(t=>t.order).sort((a,b)=>a-b);
+  if(!orders.length)return;
+  if(S.activeStart===null){S.activeStart=orders[0];}
+  else{
+    const idx=orders.indexOf(S.activeStart);
+    const ni=Math.max(0,Math.min(orders.length-1,idx+delta));
+    S.activeStart=orders[ni];
+  }
+  saveState();
+  broadcastActiveStart(S.activeStart);
+  updateCtrlDisplay();renderCurrentChips();renderStartOrderList();renderTeamList();
+  toast((delta>0?'▶ Следващ':'◀ Предишен')+' №'+S.activeStart);
+}
+
+function setManualStart(){
+  const v=parseInt(document.getElementById('manual-start').value);
+  if(isNaN(v)){toast('⚠️ Въведи валиден №','var(--red)');return;}
+  setStart(v);
+  document.getElementById('manual-start').value='';
+}
+
+// ═══════════════════════════════════════
+// CONTROL — rotation accordions
+// Each rotation has its OWN local numbering (1, 2, 3…)
+// S.activeStart stores the GLOBAL order number; local = position within rotation
+// ═══════════════════════════════════════
+let _openRotId=null; // which accordion is expanded
+
+function renderCtrlRotations(){
+  const wrap=document.getElementById('ctrl-rotations-wrap');
+  if(!wrap) return;
+  const rots=S.rotations||[];
+  if(!rots.length){
+    wrap.innerHTML=`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;color:var(--muted);font-size:13px">
+      Няма ротации — генерирай жребий в <strong style="color:var(--text)">📝 Entries</strong>.
+    </div>`;
+    return;
+  }
+  const realRots2=rots.filter(r=>r.type!=='pause');
+  wrap.innerHTML=realRots2.map((rot,ri)=>buildRotAccordion(rot,ri)).join('');
+  // auto-open first rotation that has an active team
+  if(!_openRotId){
+    const active=S.teams.find(t=>!t.isPause&&t.order===S.activeStart);
+    const firstRealRot=(S.rotations||[]).find(r=>r.type!=='pause');
+    _openRotId=active?active.rotationId:(firstRealRot?firstRealRot.id:null);
+  }
+  rots.forEach(r=>setAccordionOpen(r.id, r.id===_openRotId));
+}
+
+function buildRotAccordion(rot, ri){
+  const teams=S.teams.filter(t=>t.rotationId===rot.id&&!t.isPause)
+    .sort((a,b)=>a.order-b.order);
+  const done=teams.filter(t=>S.finalized[t.id]).length;
+  const total=teams.length;
+  const activeTeam=teams.find(t=>t.order===S.activeStart);
+  const localActive=activeTeam?teams.indexOf(activeTeam)+1:null;
+  const bg=ROT_COLORS[ri%ROT_COLORS.length];
+  const bd=ROT_BORDER[ri%ROT_BORDER.length];
+
+  return `<div style="margin-bottom:10px;border:1px solid ${bd};border-radius:12px;overflow:hidden" id="rot-acc-${rot.id}">
+    <!-- Header -->
+    <div style="background:${bg};padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:8px"
+         onclick="toggleAccordion('${rot.id}')">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--text)">
+          ${activeTeam?'▶ ':''}${rot.name}
+          ${activeTeam?`<span style="font-size:11px;color:${bd};margin-left:6px">● АКТИВНА</span>`:''}
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">
+          ${rot.cats.join(', ')} · ${total} отбора · ${done}/${total} финализирани
+          ${localActive?` · <strong style="color:var(--gold)">На мат: №${localActive}</strong>`:''}
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <span id="rot-chevron-${rot.id}" style="color:var(--muted);font-size:16px;transition:transform .2s">▼</span>
+      </div>
+    </div>
+    <!-- Body -->
+    <div id="rot-body-${rot.id}" style="display:none;padding:10px 12px">
+      <!-- Mini navigation -->
+      <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+        <button class="snb snb-prev" style="flex:1;padding:10px;font-size:13px" onclick="changeStartInRot('${rot.id}',-1)">◀ Предишен</button>
+        <div style="text-align:center;min-width:60px">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:var(--gold);line-height:1">${localActive||'—'}</div>
+          <div style="font-size:9px;color:var(--muted)">от ${total}</div>
+        </div>
+        <button class="snb snb-next" style="flex:1;padding:10px;font-size:13px" onclick="changeStartInRot('${rot.id}',1)">Следващ ▶</button>
+      </div>
+      <!-- Team list with local numbers -->
+      <div style="max-height:280px;overflow-y:auto">
+        ${teams.map((t,i)=>{
+          const isAct=t.order===S.activeStart;
+          const isFin=S.finalized[t.id];
+          const res=calcScore(t.id);
+          return `<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;margin-bottom:3px;cursor:pointer;
+            background:${isAct?'rgba(245,158,11,.12)':'var(--surface)'};
+            border:1px solid ${isAct?'var(--gold)':'var(--border)'}"
+            onclick="setStart(${t.order});renderCtrlRotations()">
+            <span style="font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:${isAct?'var(--gold)':'var(--muted)'};min-width:24px">${i+1}.</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name}</div>
+              <div style="font-size:10px;color:var(--muted)">${t.cat}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              ${isFin?`<span style="font-size:11px;color:var(--green);font-weight:600">✓ ${res?.total!=null?res.total.toFixed(2):''}</span>`
+                :res?.total!=null?`<span style="font-size:12px;color:var(--accent2)">${res.total.toFixed(2)}</span>`
+                :`<span style="font-size:10px;color:var(--border)">—</span>`}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      
+    </div>
+  </div>`;
+}
+
+function toggleAccordion(rotId){
+  if(_openRotId===rotId){
+    // collapse
+    setAccordionOpen(rotId, false);
+    _openRotId=null;
+  } else {
+    if(_openRotId) setAccordionOpen(_openRotId, false);
+    _openRotId=rotId;
+    setAccordionOpen(rotId, true);
+  }
+}
+
+function setAccordionOpen(rotId, open){
+  const body=document.getElementById('rot-body-'+rotId);
+  const chev=document.getElementById('rot-chevron-'+rotId);
+  if(body) body.style.display=open?'block':'none';
+  if(chev) chev.style.transform=open?'rotate(180deg)':'';
+}
+
+function changeStartInRot(rotId, dir){
+  const teams=S.teams.filter(t=>t.rotationId===rotId&&!t.isPause)
+    .sort((a,b)=>a.order-b.order);
+  if(!teams.length) return;
+  const cur=teams.findIndex(t=>t.order===S.activeStart);
+  let ni;
+  if(cur<0) ni=dir>0?0:teams.length-1;
+  else ni=Math.max(0,Math.min(teams.length-1,cur+dir));
+  S.activeStart=teams[ni].order;
+  saveState();
+  broadcastActiveStart(S.activeStart);
+  renderCtrlRotations();
+  renderCurrentChips();
+  document.getElementById('ctrl-active-name').textContent=teams[ni].name;
+  toast((dir>0?'▶ ':' ◀ ')+' №'+(ni+1)+' – '+teams[ni].name);
+}
+
+function updateCtrlDisplay(){
+  // legacy: just re-render rotations
+  renderCtrlRotations();
+  // update active name label
+  const team=currentTeam();
+  const el=document.getElementById('ctrl-active-name');
+  if(el) el.textContent=team?team.name:'изберете отбор';
+  document.getElementById('sb-cur').textContent=S.activeStart||'—';
+}
+
+// ── Start list PDF ────────────────────────────────────────────────
+function printStartList(){
+  const rots=S.rotations||[];
+  const teams=S.teams||[];
+  if(!teams.filter(t=>!t.isPause).length){toast('⚠️ Няма отбори','var(--red)');return;}
+
+  // Build inputs for each rotation inside a modal (no prompt())
+  const wrap=document.getElementById('start-times-inputs');
+  if(!wrap) return;
+  const realR=rots.filter(r=>r.type!=='pause');
+  wrap.innerHTML=realR.map((rot,i)=>`
+    <div class="form-group">
+      <label>${rot.name} (${(rot.cats||[]).join(', ')})</label>
+      <input type="time" id="st-${rot.id}" value=""
+        style="font-size:16px;font-weight:600;color:var(--text)" placeholder="09:00">
+    </div>`).join('');
+
+  document.getElementById('modal-start-times').classList.add('open');
+}
+
+function doGenerateStartList(){
+  closeModal('modal-start-times');
+  const rots=S.rotations||[];
+  const teams=S.teams||[];
+
+  const ROT_BG_PDF=['#e0f2fe','#dcfce7','#fef9c3','#fce7f3','#ede9fe','#ffedd5'];
+  const ROT_BD_PDF=['#0284c7','#16a34a','#ca8a04','#be185d','#7c3aed','#ea580c'];
+
+  let sections='';
+  let rotColorIdx=0;
+  rots.forEach((rot,ri)=>{
+    if(rot.type==='pause'){
+      sections+=`<div style="background:#fef3c7;border:1px dashed #f59e0b;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:13px;font-weight:600;color:#92400e">⏸ Пауза: ${rot.minutes} мин${rot.note?' — '+rot.note:''}</div>`;
+      return;
+    }
+    const rotTeams=teams.filter(t=>t.rotationId===rot.id&&!t.isPause)
+      .sort((a,b)=>a.order-b.order);
+    if(!rotTeams.length) return;
+    const bg=ROT_BG_PDF[rotColorIdx%ROT_BG_PDF.length];
+    const bd=ROT_BD_PDF[rotColorIdx%ROT_BD_PDF.length];
+    rotColorIdx++;
+    const timeVal=document.getElementById('st-'+rot.id)?.value||'';
+
+    const rows=rotTeams.map((t,i)=>`
+      <tr style="background:${i%2===0?'#fff':'#f9fafb'};border-bottom:1px solid #f1f5f9">
+        <td style="padding:9px 12px;text-align:center;font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:${bd};width:44px">${i+1}</td>
+        <td style="padding:9px 12px">
+          <div style="font-weight:700;font-size:13px;color:#0f172a">${t.name}</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:1px">${t.club}</div>
+        </td>
+        <td style="padding:9px 12px;text-align:center">
+          <span style="background:${bg};color:${bd};border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700">${t.cat}</span>
+        </td>
+        <td style="padding:9px 12px;text-align:center;font-size:12px;color:#6b7280">${t.gymnasts||'—'}</td>
+        <td style="padding:9px 24px;border-left:1px solid #f1f5f9;min-width:80px"></td>
+      </tr>`).join('');
+
+    sections+=`
+      <div style="margin-bottom:24px;break-inside:avoid">
+        <div style="background:${bg};border-left:4px solid ${bd};border-radius:8px;padding:10px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+          <div>
+            <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#0f172a">${rot.name}</div>
+            <div style="font-size:11px;color:#475569;margin-top:2px">${rot.cats.join(', ')} · ${rotTeams.length} отбора</div>
+          </div>
+          ${timeVal?`<div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:${bd}">🕐 ${timeVal}</div>`:''}
+        </div>
+        <table style="width:100%;border-collapse:collapse;box-shadow:0 1px 4px rgba(0,0,0,.07)">
+          <thead>
+            <tr style="background:#1e293b;color:#fff">
+              <th style="padding:8px 12px;text-align:center;font-size:11px;width:44px">№</th>
+              <th style="padding:8px 12px;text-align:left;font-size:11px">ОТБОР / КЛУБ</th>
+              <th style="padding:8px 12px;text-align:center;font-size:11px">КАТЕГОРИЯ</th>
+              <th style="padding:8px 12px;text-align:center;font-size:11px">ГИМ.</th>
+              <th style="padding:8px 24px;text-align:center;font-size:11px;border-left:1px solid rgba(255,255,255,.15)">ПОДПИС</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        
+      </div>`;
+  });
+
+  const now=new Date().toLocaleString('bg-BG',{day:'2-digit',month:'long',year:'numeric'});
+  const html=`<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Стартов лист – ${S.compName||'AGG'}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#fff;color:#0f172a;padding:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:A4 portrait;margin:10mm 12mm}
+  @media print{.no-print{display:none!important}}
+  .print-btn{display:flex;align-items:center;gap:8px;margin:0 auto 16px;padding:10px 22px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+  .print-btn:hover{background:#6d28d9}
+</style></head><body>
+<button class="print-btn no-print" onclick="window.print()">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  Принтирай / Запази PDF
+</button>
+<div style="max-width:190mm;margin:0 auto">
+  <div style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:16px 20px;border-radius:10px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;opacity:.9">AGG<span style="color:#f59e0b">·</span>SCORE</div>
+    <div style="text-align:right">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700">${S.compName||'Стартов лист'}</div>
+      <div style="font-size:11px;opacity:.8;margin-top:2px">📍 ${S.compPlace||'—'} &nbsp;·&nbsp; 📅 ${S.compDate||now}</div>
+    </div>
+  </div>
+  ${sections}
+</div>
+</body></html>`;
+
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  toast('🖨 Стартов лист е отворен');
+}
+
+// ═══════════════════════════════════════
+// CHIPS FOR CURRENT TEAM
+function renderCurrentChips(){
+  const team=currentTeam();
+  const wrap=document.getElementById('ctrl-chips-wrap');
+  if(!team){
+    wrap.innerHTML='<p style="font-size:12px;color:var(--muted)">Изберете стартов № за да видите оценките</p>';
+    document.getElementById('ctrl-total').textContent='—';
+    document.getElementById('ctrl-breakdown').innerHTML='';
+    return;
+  }
+  const s=S.scores[team.id]||{};
+  const profile=getCatProfile(team.cat);
+  let html='';
+  for(const type of profile){
+    const cfg=SCORE_CFG[type];
+    html+=`<div class="chips-section">
+      <div class="chips-section-title ${type}">${cfg.label} (max ${cfg.max})</div>
+      <div class="chips">`;
+    for(let i=1;i<=cfg.judges;i++){
+      const key=type+i;
+      const val=s[key];
+      const ok=val!==undefined;
+      html+=`<div class="chip ${ok?'ok':'pending'}" style="cursor:pointer" title="Кликни за редактиране" onclick="openEditScore('${team.id}','${type}','${i}')">
+        <div class="cr">Съдия ${i}</div>
+        <div class="cv">${ok?val.toFixed(3):'—'}</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:1px">✏</div>
+      </div>`;
+    }
+    html+=`</div></div>`;
+  }
+  wrap.innerHTML=html;
+  // Total
+  const res=calcScore(team.id);
+  document.getElementById('ctrl-total').textContent=fmt(res?.total);
+  if(res?.parts){
+    document.getElementById('ctrl-breakdown').innerHTML=res.profile.map(type=>{
+      const cfg=SCORE_CFG[type];
+      return `<div>${cfg.label}: <strong style="color:var(--text)">${fmt(res.parts[type])}</strong></div>`;
+    }).join('');
+  }
+}
+
+// ═══════════════════════════════════════
+// FINALIZE
+function finalizeScore(){
+  const team=currentTeam();
+  if(!team){toast('⚠️ Няма активен отбор','var(--red)');return;}
+  const res=calcScore(team.id);
+  if(res?.total!==null){
+    S.finalized[team.id]=true;
+    saveState();
+    renderStartOrderList();renderScoreboard();
+    toast(`🏁 Финализирано: ${fmt(res.total)}`,'var(--gold)');
+  } else {
+    toast('⚠️ Не всички оценки са подадени','var(--red)');
+  }
+}
+
+function resetTeamScores(){
+  const team=currentTeam();
+  if(!team){toast('⚠️ Няма активен отбор','var(--red)');return;}
+  if(!confirm('Изчистване на оценките за '+team.name+'?'))return;
+  S.scores[team.id]={};
+  delete S.finalized[team.id];
+  saveState();renderCurrentChips();
+  toast('🗑 Изчистено');
+}
+
+// ═══════════════════════════════════════
+// CALC
+function calcScore(teamId){
+  const s=S.scores[teamId]||{};
+  const team=S.teams.find(t=>t.id===teamId);
+  if(!team)return null;
+  const profile=getCatProfile(team.cat);
+  const parts={};
+  for(const type of profile){
+    const cfg=SCORE_CFG[type];
+    const vals=[];
+    for(let i=1;i<=cfg.judges;i++){if(s[type+i]!==undefined)vals.push(s[type+i]);}
+    parts[type]=vals.length?cfg.compute(vals):null;
+  }
+  const valids=profile.map(t=>parts[t]).filter(v=>v!==null);
+  const total=valids.length===profile.length?valids.reduce((a,b)=>a+b,0):null;
+  return{parts,total,profile};
+}
+
+// ═══════════════════════════════════════
+// LIVE TABLE  – компактна, без хоризонтален скрол
+// Колони: № | Отбор | Кат | TV (avg + 1-4) | AV/AV-A (avg + 1-4) | AV-B (avg + 1-4) | EXE (avg + 1-4) | ОБЩО | Статус
+function renderLive(){
+  updateSelects();
+  const cat=document.getElementById('live-cat-filter').value;
+  let teams=(cat?S.teams.filter(t=>t.cat===cat):[...S.teams]).filter(t=>!t.isPause);
+  document.getElementById('live-total').textContent=S.teams.filter(t=>!t.isPause).length;
+  const scored=teams.filter(t=>calcScore(t.id)?.total!==null).length;
+  document.getElementById('live-scored').textContent=scored;
+  document.getElementById('live-pending').textContent=teams.length-scored;
+
+  if(!teams.length){
+    document.getElementById('live-thead').innerHTML='';
+    document.getElementById('live-tbody').innerHTML=
+      '<tr><td colspan="10" style="padding:20px;color:var(--muted);text-align:center">Няма отбори</td></tr>';
+    return;
+  }
+
+  // Check which components are actually used across displayed teams
+  const anyAVB=teams.some(t=>getCatProfile(t.cat).includes('AVB'));
+
+  // Helper: get the "AV" value regardless of youth/senior naming
+  function getAvVal(parts){ return parts?.AV??parts?.AVA??null; }
+  function getAvKeys(cat){ return getCatProfile(cat).includes('AV')?'AV':'AVA'; }
+
+  // Score sub-cells: show individual judges + avg in compact form
+  function judgesCell(scores, type, teamProfile, res, teamId){
+    const usesType = teamProfile.includes(type);
+    if(!usesType) return `<td style="color:var(--border);font-size:11px;text-align:center;padding:4px">н/п</td>`;
+    const cfg=SCORE_CFG[type];
+    const vals=[];
+    for(let i=1;i<=cfg.judges;i++){
+      const v=scores[type+i];
+      const hasVal=v!==undefined;
+      vals.push(`<span style="cursor:pointer;color:${hasVal?'var(--green)':'var(--border)'};text-decoration:${hasVal?'underline dotted':'none'}"
+        title="✏ Редактирай ${cfg.label} Съдия ${i}"
+        onclick="openEditScore('${teamId}','${type}','${i}')">${hasVal?v.toFixed(2):'—'}</span>`);
+    }
+    const avg=res?.parts?.[type];
+    const avgStr=avg!=null?`<div style="font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--blue);line-height:1.1">${avg.toFixed(3)}</div>`
+      :`<div style="color:var(--muted);font-size:12px">—</div>`;
+    return `<td style="padding:6px 8px;text-align:center;vertical-align:middle">
+      ${avgStr}
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;display:flex;gap:4px;justify-content:center;flex-wrap:wrap">
+        ${vals.map((v,i)=>`<span>${i+1}:${v}</span>`).join('')}
+      </div>
+    </td>`;
+  }
+
+  // AV/AV-A merged cell
+  function avMergedCell(scores, teamCat, res, teamId){
+    const avType=getAvKeys(teamCat);
+    const usesAny=getCatProfile(teamCat).includes('AV')||getCatProfile(teamCat).includes('AVA');
+    if(!usesAny) return `<td style="color:var(--border);font-size:11px;text-align:center;padding:4px">н/п</td>`;
+    const cfg=SCORE_CFG[avType];
+    const vals=[];
+    for(let i=1;i<=cfg.judges;i++){
+      const v=scores[avType+i];
+      const hasVal=v!==undefined;
+      vals.push(`<span style="cursor:pointer;color:${hasVal?'var(--green)':'var(--border)'};text-decoration:${hasVal?'underline dotted':'none'}"
+        title="✏ Редактирай ${cfg.label} Съдия ${i}"
+        onclick="openEditScore('${teamId}','${avType}','${i}')">${hasVal?v.toFixed(2):'—'}</span>`);
+    }
+    const avg=getAvVal(res?.parts);
+    const avgStr=avg!=null
+      ?`<div style="font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--teal);line-height:1.1">${avg.toFixed(3)}</div>`
+      :`<div style="color:var(--muted);font-size:12px">—</div>`;
+    return `<td style="padding:6px 8px;text-align:center;vertical-align:middle">
+      ${avgStr}
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;display:flex;gap:4px;justify-content:center;flex-wrap:wrap">
+        ${vals.map((v,i)=>`<span>${i+1}:${v}</span>`).join('')}
+      </div>
+    </td>`;
+  }
+
+  // Build header
+  const avbHeader=anyAVB
+    ?`<th style="background:rgba(21,128,61,.22);color:#86efac;padding:8px;text-align:center;font-size:11px">AV-B<div style="font-size:9px;font-weight:400;opacity:.7">avg + съдии</div></th>`:'';
+  const thHtml=`<tr>
+    <th style="padding:8px 10px;text-align:center;width:36px">№</th>
+    <th style="padding:8px 10px;text-align:left">Отбор</th>
+    <th style="padding:8px 6px;text-align:center;font-size:11px">Кат.</th>
+    <th style="background:rgba(202,138,4,.22);color:#fde047;padding:8px;text-align:center;font-size:11px">TV<div style="font-size:9px;font-weight:400;opacity:.7">avg + съдии</div></th>
+    <th style="background:rgba(29,78,216,.22);color:#93c5fd;padding:8px;text-align:center;font-size:11px">AV / AV-A<div style="font-size:9px;font-weight:400;opacity:.7">avg + съдии</div></th>
+    ${avbHeader}
+    <th style="background:rgba(190,24,93,.22);color:#f9a8d4;padding:8px;text-align:center;font-size:11px">EXE<div style="font-size:9px;font-weight:400;opacity:.7">avg + съдии</div></th>
+    <th style="background:rgba(168,85,247,.18);color:var(--accent2);padding:8px;text-align:center;font-size:11px">ОБЩО</th>
+    <th style="padding:8px;text-align:center;font-size:11px">Статус</th>
+  </tr>`;
+  document.getElementById('live-thead').innerHTML=thHtml;
+
+  let tbHtml='';
+  teams.forEach(t=>{
+    const s=S.scores[t.id]||{};
+    const res=calcScore(t.id);
+    const isActive=t.order===S.activeStart;
+    const profile=getCatProfile(t.cat);
+    const tot=res?.total;
+    const fin=S.finalized[t.id];
+
+    const avbCell=anyAVB?judgesCell(s,'AVB',profile,res):'';
+
+    tbHtml+=`<tr class="${isActive?'active-row':''}">
+      <td style="text-align:center;font-weight:700;padding:4px 6px">${t.order}${isActive?' <span style="color:var(--gold)">▶</span>':''}</td>
+      <td style="padding:6px 10px">
+        <div style="font-weight:600;font-size:13px">${t.name}</div>
+        <div style="font-size:11px;color:var(--muted)">${t.club}</div>
+      </td>
+      <td style="text-align:center;padding:4px 6px"><span class="pill pp" style="font-size:10px">${t.cat}</span></td>
+      ${judgesCell(s,'TV',profile,res)}
+      ${avMergedCell(s,t.cat,res)}
+      ${avbCell}
+      ${judgesCell(s,'EXE',profile,res)}
+      <td style="text-align:center;padding:6px 8px">
+        ${tot!=null?`<div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--accent2)">${tot.toFixed(3)}</div>`
+          :`<span style="color:var(--muted);font-size:12px">—</span>`}
+      </td>
+      <td style="text-align:center;padding:4px 8px;font-size:11px">
+        ${fin?'<span style="color:var(--green);font-weight:600">✓ Финал</span>':'<span style="color:var(--muted)">В процес</span>'}
+      </td>
+    </tr>`;
+  });
+  document.getElementById('live-tbody').innerHTML=tbHtml;
+}
+
+// ═══════════════════════════════════════
+// SCOREBOARD
+function renderScoreboard(){
+  updateSelects();
+  const cat=document.getElementById('sb-cat').value;
+  let teams=(cat?S.teams.filter(t=>t.cat===cat):[...S.teams]).filter(t=>!t.isPause);
+  const withScores=teams.map(t=>({...t,...calcScore(t.id)}));
+  const ranked=withScores.filter(t=>t.total!==null).sort((a,b)=>b.total-a.total);
+  const pending=withScores.filter(t=>t.total===null);
+
+  // column headers: use selected cat, or if mixed show all components
+  const firstReal=S.teams.find(t=>!t.isPause);
+  const sampleCat=cat||(firstReal?.cat)||'6-8';
+  const cols=getCatProfile(sampleCat);
+  document.getElementById('sb-col-h').innerHTML=
+    [...cols,'ОБЩО'].map(c=>`<span style="min-width:44px;text-align:center">${SCORE_CFG[c]?.label||c}</span>`).join('');
+
+  const list=document.getElementById('sb-list');
+
+  if(!cat){
+    // group by category
+    const cats=[...new Set(teams.map(t=>t.cat))];
+    if(!cats.length){list.innerHTML='<p style="padding:14px;color:var(--muted)">Няма резултати</p>';return;}
+    const catBg={'6-8':'rgba(29,78,216,.06)','8-10':'rgba(16,185,129,.06)','10-12':'rgba(124,58,237,.06)','12-14':'rgba(236,72,153,.06)','Девойки':'rgba(245,158,11,.06)','Жени':'rgba(239,68,68,.06)','Open':'rgba(148,163,184,.06)'};
+    let html='';
+    cats.forEach(c=>{
+      const catCols=getCatProfile(c);
+      const cRanked=ranked.filter(t=>t.cat===c);
+      const cPending=pending.filter(t=>t.cat===c);
+      const bg=catBg[c]||'rgba(148,163,184,.06)';
+      html+=`<div style="background:${bg};padding:6px 14px;font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)">▸ ${c}</div>`;
+      html+=[...cRanked.map((t,i)=>scoreRow(t,i+1,catCols)),...cPending.map(t=>scoreRow(t,null,catCols))].join('');
+    });
+    list.innerHTML=html;
+  } else {
+    const rows=[...ranked.map((t,i)=>scoreRow(t,i+1,cols)),...pending.map(t=>scoreRow(t,null,cols))];
+    list.innerHTML=rows.join('')||'<p style="padding:14px;color:var(--muted)">Няма резултати за тази категория</p>';
+  }
+}
+
+function scoreRow(t,rank,cols){
+  const rc=rank===1?'r1':rank===2?'r2':rank===3?'r3':'rn';
+  const isActive=t.order===S.activeStart;
+  const fin=S.finalized[t.id]?'<span class="pill pg" style="margin-left:4px">✓</span>':'';
+  const colsHTML=(cols||getCatProfile(t.cat)).map(type=>{
+    const val=t.parts?t.parts[type]:null;
+    return `<div class="sc"><div class="sl">${SCORE_CFG[type]?.label||type}</div><div class="sv">${fmt(val)}</div></div>`;
+  }).join('');
+  return `<div class="team-row ${isActive?'active-team':''}">
+    <div class="rank-badge ${rc}">${rank||'—'}</div>
+    <div class="team-info">
+      <div class="tn">${t.name}${fin}</div>
+      <div class="tc">${t.club} · <span class="pill pp">${t.cat}</span></div>
+    </div>
+    <div class="score-cols">
+      ${colsHTML}
+      <div class="sc"><div class="sl">ОБЩО</div><div class="sv tot">${fmt(t.total)}</div></div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════
+// SAVE / LOAD STATE AS JSON
+function exportJSON(){
+  const data=JSON.stringify(S, null, 2);
+  const name=(S.compName||'AGG').replace(/\s+/g,'_')
+    +'_'+(S.compDate||new Date().toISOString().split('T')[0])
+    +'.json';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));
+  a.download=name;
+  a.click();
+  toast('📥 Файлът е запазен: '+name);
+}
+
+function importJSON(event){
+  const file=event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const parsed=JSON.parse(e.target.result);
+      // Basic validation
+      if(!Array.isArray(parsed.teams)||typeof parsed.scores!=='object')
+        throw new Error('Невалиден формат');
+      Object.assign(S,{...defaultState(),...parsed});
+      saveState();
+      renderAll();
+      // Update form fields
+      document.getElementById('comp-name').value=S.compName||'';
+      document.getElementById('comp-date').value=S.compDate||'';
+      document.getElementById('comp-place').value=S.compPlace||'';
+      const st=document.getElementById('import-status');
+      st.style.display='block';
+      st.style.background='rgba(16,185,129,.12)';
+      st.style.border='1px solid var(--green)';
+      st.style.color='var(--green)';
+      st.textContent='✅ Заредено: '+file.name+' — '+S.teams.length+' отбора';
+      toast('✅ Состезанието е заредено успешно!');
+    }catch(err){
+      const st=document.getElementById('import-status');
+      st.style.display='block';
+      st.style.background='rgba(239,68,68,.1)';
+      st.style.border='1px solid var(--red)';
+      st.style.color='var(--red)';
+      st.textContent='❌ Грешка: '+err.message;
+      toast('❌ Невалиден файл','var(--red)');
+    }
+    // Reset file input so same file can be reloaded
+    event.target.value='';
+  };
+  reader.readAsText(file);
+}
+
+function exportResults(){
+  let txt=`AGG SCORE – ${S.compName||'Турнир'} – ${S.compDate||''}\n\n`;
+  const cats=[...new Set(S.teams.map(t=>t.cat))];
+  cats.forEach(cat=>{
+    txt+=`\n══ ${cat} ══\n`;
+    const profile=getCatProfile(cat);
+    txt+=['Ранг','Отбор','Клуб',...profile.map(p=>SCORE_CFG[p].label),'ОБЩО'].join('\t')+'\n';
+    S.teams.filter(t=>t.cat===cat).map(t=>({...t,...calcScore(t.id)}))
+      .filter(t=>t.total!==null).sort((a,b)=>b.total-a.total)
+      .forEach((t,i)=>{
+        txt+=`${i+1}\t${t.name}\t${t.club}\t`+
+          profile.map(p=>fmt(t.parts?.[p])).join('\t')+`\t${fmt(t.total)}\n`;
+      });
+  });
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));
+  a.download=`AGG_${(S.compName||'Results').replace(/\s/g,'_')}.txt`;
+  a.click();
+  toast('📤 Експортирано');
+}
+
+// ═══════════════════════════════════════
+// PDF DROPDOWN HELPERS
+let _pdfOrientation = 'portrait'; // portrait | landscape
+
+function togglePdfMenu(e){
+  e.stopPropagation();
+  const m=document.getElementById('pdf-menu');
+  if(m.style.display!=='none'){m.style.display='none';return;}
+
+  // Position using fixed coords — always stays in viewport
+  const btn=e.currentTarget;
+  const r=btn.getBoundingClientRect();
+  const mw=Math.min(260, window.innerWidth*0.92);
+  const gap=6;
+
+  // Vertical: open below button, or above if not enough space
+  const spaceBelow=window.innerHeight - r.bottom - gap;
+  const openUp=spaceBelow < 260 && r.top > 260;
+  m.style.top='';m.style.bottom='';
+  if(openUp){
+    m.style.bottom=(window.innerHeight - r.top + gap)+'px';
+  } else {
+    m.style.top=(r.bottom + gap)+'px';
+  }
+
+  // Horizontal: align to left edge of button, but clamp to viewport
+  let left=r.left;
+  if(left + mw > window.innerWidth - 8) left=window.innerWidth - mw - 8;
+  if(left < 8) left=8;
+  m.style.left=left+'px';
+  m.style.right='auto';
+  m.style.minWidth=mw+'px';
+  m.style.display='block';
+}
+function setPdfOri(ori){
+  _pdfOrientation=ori;
+  document.getElementById('ori-portrait').style.borderColor=ori==='portrait'?'var(--accent)':'var(--border)';
+  document.getElementById('ori-portrait').style.color=ori==='portrait'?'var(--accent2)':'var(--text)';
+  document.getElementById('ori-landscape').style.borderColor=ori==='landscape'?'var(--accent)':'var(--border)';
+  document.getElementById('ori-landscape').style.color=ori==='landscape'?'var(--accent2)':'var(--text)';
+}
+// Close menu when clicking outside
+document.addEventListener('click',()=>{
+  const m=document.getElementById('pdf-menu');
+  if(m) m.style.display='none';
+});
+
+// ═══════════════════════════════════════
+// PDF PRINT  — mode: 'total' | 'detail' | 'full'
+function printResults(mode='detail'){
+  document.getElementById('pdf-menu').style.display='none';
+  updateSelects();
+  const cat=document.getElementById('sb-cat').value;
+  const ori=_pdfOrientation; // 'portrait' | 'landscape'
+
+  let teams=(cat?S.teams.filter(t=>t.cat===cat):[...S.teams]).filter(t=>!t.isPause);
+  const ranked=teams.map(t=>({...t,...calcScore(t.id)}))
+    .filter(t=>t.total!==null).sort((a,b)=>b.total-a.total);
+  const pending=teams.map(t=>({...t,...calcScore(t.id)}))
+    .filter(t=>t.total===null);
+
+  if(!ranked.length&&!pending.length){
+    toast('⚠️ Няма резултати','var(--red)');return;
+  }
+
+  const usesAVA=teams.some(t=>getCatProfile(t.cat).includes('AVA'));
+  const usesAV =teams.some(t=>getCatProfile(t.cat).includes('AV'));
+  const usesAVB=teams.some(t=>getCatProfile(t.cat).includes('AVB'));
+  const medal=['🥇','🥈','🥉'];
+
+  function getAV(t){ return t.parts?.AV??t.parts?.AVA??null; }
+  function getAvType(teamCat){ return getCatProfile(teamCat).includes('AV')?'AV':'AVA'; }
+
+  // ── cell generators ──────────────────────────────
+  const th=(txt,bg,fg='#fff',extra='')=>
+    `<th style="background:${bg};color:${fg};padding:9px 8px;text-align:center;font-size:11px;font-weight:700;white-space:nowrap;${extra}">${txt}</th>`;
+
+  const avgCell=(v,color)=>v!=null
+    ?`<td style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:${color};padding:8px 6px">${v.toFixed(3)}</td>`
+    :`<td style="text-align:center;color:#d1d5db;font-size:12px;padding:8px 6px">—</td>`;
+
+  const indivCell=(v)=>v!=null
+    ?`<td style="text-align:center;font-size:12px;color:#374151;padding:6px 4px">${v.toFixed(2)}</td>`
+    :`<td style="text-align:center;color:#d1d5db;font-size:11px;padding:6px 4px">—</td>`;
+
+  const naCell=(span=1)=>
+    `<td colspan="${span}" style="text-align:center;color:#e5e7eb;font-size:11px;background:#fafafa;padding:6px 4px">н/п</td>`;
+
+  // ── build header based on mode ────────────────────
+  const NUM_JUDGES=4;
+  const useCompactFull=(mode==='full'&&ori==='portrait');
+
+  function buildHeader(){
+    if(mode==='total'){
+      return `<tr>
+        ${th('№','#1e293b','#fff','width:40px')}
+        ${th('ОТБОР / КЛУБ','#1e293b','#fff','text-align:left;min-width:160px')}
+        ${th('ОБЩО','#7c3aed','#fff','font-size:15px;min-width:80px')}
+      </tr>`;
+    }
+    const avLabel=usesAVA?'AV-A':(usesAV?'AV':'AV/AV-A');
+    let row=`<tr>
+      ${th('№','#1e293b','#fff','width:36px')}
+      ${th('ОТБОР / КЛУБ','#1e293b','#fff','text-align:left;min-width:130px')}`;
+    if(mode==='detail'){
+      row+=th('TV','#fef9c3','#a16207');
+      row+=th(avLabel,'#dbeafe','#1e40af');
+      if(usesAVB) row+=th('AV-B','#dcfce7','#166534');
+      row+=th('EXE','#fce7f3','#9d174d');
+      row+=th('ОБЩО','#7c3aed','#fff','font-size:14px');
+    } else if(useCompactFull){
+      row+=th('TV<br><span style="font-weight:400;font-size:9px">avg · 1–4</span>','#fef9c3','#a16207');
+      row+=th(`${avLabel}<br><span style="font-weight:400;font-size:9px">avg · 1–4</span>`,'#dbeafe','#1e40af');
+      if(usesAVB) row+=th('AV-B<br><span style="font-weight:400;font-size:9px">avg · 1–4</span>','#dcfce7','#166534');
+      row+=th('EXE<br><span style="font-weight:400;font-size:9px">avg · 1–4</span>','#fce7f3','#9d174d');
+      row+=th('ОБЩО','#7c3aed','#fff','font-size:14px');
+    } else {
+      row+=th('TV<br><span style="font-weight:400;font-size:9px;opacity:.8">avg</span>','#fef9c3','#a16207');
+      for(let i=1;i<=NUM_JUDGES;i++) row+=th(`TV${i}`,'#fef3c7','#a16207','font-size:10px');
+      row+=th(`${avLabel}<br><span style="font-weight:400;font-size:9px;opacity:.8">avg</span>`,'#dbeafe','#1e40af');
+      for(let i=1;i<=NUM_JUDGES;i++) row+=th(`${avLabel.split('/')[0]}${i}`,'#eff6ff','#1e40af','font-size:10px');
+      if(usesAVB){
+        row+=th('AV-B<br><span style="font-weight:400;font-size:9px;opacity:.8">avg</span>','#dcfce7','#166534');
+        for(let i=1;i<=NUM_JUDGES;i++) row+=th(`AVB${i}`,'#f0fdf4','#166534','font-size:10px');
+      }
+      row+=th('EXE<br><span style="font-weight:400;font-size:9px;opacity:.8">avg</span>','#fce7f3','#9d174d');
+      for(let i=1;i<=NUM_JUDGES;i++) row+=th(`EXE${i}`,'#fdf2f8','#9d174d','font-size:10px');
+      row+=th('ОБЩО','#7c3aed','#fff','font-size:14px');
+    }
+    row+='</tr>';
+    return row;
+  }
+
+  // helper: small sub-row with individual judge scores (compact full portrait)
+  function judgeSubRow(s,avType){
+    const cellSt='padding:2px 6px;border-top:none;font-size:10px;color:#6b7280;vertical-align:top;line-height:1.6';
+    const mini=(type)=>Array.from({length:NUM_JUDGES},(_,j)=>{
+      const v=s[type+String(j+1)];
+      return `${j+1}:${v!=null?v.toFixed(2):'—'}`;
+    }).join('  ');
+    let cells=`<td colspan="2" style="${cellSt}"></td>`;
+    cells+=`<td style="${cellSt};background:#fffef0">${mini('TV')}</td>`;
+    cells+=`<td style="${cellSt};background:#f0f4ff">${mini(avType)}</td>`;
+    if(usesAVB) cells+=`<td style="${cellSt};background:#f0fff4">${mini('AVB')}</td>`;
+    cells+=`<td style="${cellSt};background:#fff0f7">${mini('EXE')}</td>`;
+    cells+=`<td style="${cellSt}"></td>`;
+    return `<tr style="background:#fafafa;border-bottom:2px solid #e2e8f0">${cells}</tr>`;
+  }
+
+  // ── build data rows ───────────────────────────────
+  function buildRows(list,startRank){
+    return list.map((t,i)=>{
+      const rank=startRank?startRank+i:null;
+      const isTop3=rank&&rank<=3;
+      const rowBg=rank===1?'#fffbeb':rank===2?'#f8fafc':rank===3?'#fdf6ee':'#ffffff';
+      const rankCell=rank
+        ?(isTop3?`<td style="text-align:center;font-size:20px;padding:6px">${medal[rank-1]}</td>`
+          :`<td style="text-align:center;font-weight:700;color:#6b7280;font-size:13px;padding:6px">${rank}</td>`)
+        :`<td style="text-align:center;color:#d1d5db;font-size:11px;padding:6px">—</td>`;
+      const nameCell=`<td style="padding:7px 10px">
+        <div style="font-weight:700;font-size:12px;color:#0f172a">${t.name}</div>
+        <div style="font-size:10px;color:#94a3b8;margin-top:1px">${t.club}</div>
+      </td>`;
+      const totalCell=`<td style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:${mode==='total'?'20px':'17px'};font-weight:700;color:#7c3aed;background:rgba(124,58,237,.05);padding:7px 5px">${t.total!=null?t.total.toFixed(3):'—'}</td>`;
+      const s=S.scores[t.id]||{};
+      const profile=getCatProfile(t.cat);
+      const avType=getAvType(t.cat);
+
+      if(mode==='total'){
+        return `<tr style="background:${rowBg};border-bottom:1px solid #f1f5f9">${rankCell}${nameCell}${totalCell}</tr>`;
+      }
+      if(mode==='detail'){
+        const avVal=getAV(t);
+        return `<tr style="background:${rowBg};border-bottom:1px solid #f1f5f9">
+          ${rankCell}${nameCell}
+          ${avgCell(t.parts?.TV,'#a16207')}
+          ${avgCell(avVal,'#1e40af')}
+          ${usesAVB?(profile.includes('AVB')?avgCell(t.parts?.AVB,'#166534'):naCell()):''}
+          ${avgCell(t.parts?.EXE,'#9d174d')}
+          ${totalCell}
+        </tr>`;
+      }
+      if(useCompactFull){
+        const avVal=getAV(t);
+        const mainRow=`<tr style="background:${rowBg}">
+          ${rankCell}${nameCell}
+          ${avgCell(t.parts?.TV,'#a16207')}
+          ${avgCell(avVal,'#1e40af')}
+          ${usesAVB?(profile.includes('AVB')?avgCell(t.parts?.AVB,'#166534'):naCell()):''}
+          ${avgCell(t.parts?.EXE,'#9d174d')}
+          ${totalCell}
+        </tr>`;
+        return mainRow+judgeSubRow(s,avType);
+      }
+      // full landscape
+      const tvCells=[avgCell(t.parts?.TV,'#a16207'),...Array.from({length:NUM_JUDGES},(_,j)=>indivCell(s[`TV${j+1}`]))].join('');
+      const avCells=[avgCell(getAV(t),'#1e40af'),...Array.from({length:NUM_JUDGES},(_,j)=>indivCell(s[`${avType}${j+1}`]))].join('');
+      const avbCells=usesAVB?(profile.includes('AVB')
+        ?[avgCell(t.parts?.AVB,'#166534'),...Array.from({length:NUM_JUDGES},(_,j)=>indivCell(s[`AVB${j+1}`]))].join('')
+        :naCell(NUM_JUDGES+1)):'';
+      const exeCells=[avgCell(t.parts?.EXE,'#9d174d'),...Array.from({length:NUM_JUDGES},(_,j)=>indivCell(s[`EXE${j+1}`]))].join('');
+      return `<tr style="background:${rowBg};border-bottom:1px solid #f1f5f9">
+        ${rankCell}${nameCell}${tvCells}${avCells}${avbCells}${exeCells}${totalCell}
+      </tr>`;
+    }).join('');
+  }
+
+  // ── group by cat or single cat ────────────────────
+  const catColors={'6-8':'#dbeafe','8-10':'#d1fae5','10-12':'#ede9fe','12-14':'#fce7f3','Девойки':'#fef3c7','Жени':'#fee2e2','Open':'#f1f5f9'};
+  const catTxtColors={'6-8':'#1d4ed8','8-10':'#065f46','10-12':'#5b21b6','12-14':'#9d174d','Девойки':'#92400e','Жени':'#991b1b','Open':'#475569'};
+  const colspan=mode==='total'?3:mode==='detail'?(3+(usesAVB?1:0)+3):(2+(NUM_JUDGES+1)*4+(usesAVB?NUM_JUDGES+1:0)+1);
+
+  let tableBody='';
+  if(!cat){
+    [...new Set(S.teams.map(t=>t.cat))].forEach(c=>{
+      const cR=ranked.filter(t=>t.cat===c), cP=pending.filter(t=>t.cat===c);
+      if(!cR.length&&!cP.length) return;
+      const bg=catColors[c]||'#f8fafc', col=catTxtColors[c]||'#1e293b';
+      tableBody+=`<tr><td colspan="${colspan}" style="background:${bg};padding:7px 14px;font-weight:700;font-size:12px;color:${col};letter-spacing:1px;text-transform:uppercase">▸ ${c}</td></tr>`;
+      tableBody+=buildRows(cR,1);
+      if(cP.length) tableBody+=buildRows(cP,null);
+    });
+  } else {
+    tableBody+=buildRows(ranked,1);
+    if(pending.length) tableBody+=buildRows(pending,null);
+  }
+
+  // ── meta ──────────────────────────────────────────
+  const catTitle=cat?` – ${cat}`:'';
+  const modeLabel=mode==='total'?'Само тотал':mode==='detail'?'Детайлни оценки':'Всички съдии';
+  const now=new Date().toLocaleString('bg-BG',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const pageSize=ori==='landscape'?'A4 landscape':'A4 portrait';
+  const bodyWidth=ori==='landscape'?'277mm':'190mm';
+
+  const legendHTML=mode!=='total'?`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;justify-content:flex-end">
+    <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:#475569"><div style="width:10px;height:10px;border-radius:2px;background:#fef9c3;border:1px solid #a16207"></div>TV</div>
+    ${(usesAV||usesAVA)?`<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:#475569"><div style="width:10px;height:10px;border-radius:2px;background:#dbeafe;border:1px solid #1e40af"></div>${usesAVA?'AV-A':'AV'}</div>`:''}
+    ${usesAVB?`<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:#475569"><div style="width:10px;height:10px;border-radius:2px;background:#dcfce7;border:1px solid #166534"></div>AV-B</div>`:''}
+    <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:#475569"><div style="width:10px;height:10px;border-radius:2px;background:#fce7f3;border:1px solid #9d174d"></div>EXE</div>
+  </div>`:''
+
+  const html=`<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>AGG Резултати${catTitle}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#fff;color:#0f172a;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:12px}
+  @page{size:${pageSize};margin:10mm 12mm}
+  @media print{.no-print{display:none!important}}
+  .wrap{max-width:${bodyWidth};margin:0 auto}
+  .hdr{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:16px 22px;border-radius:10px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+  .hdr-logo{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;letter-spacing:3px;opacity:.9}
+  .hdr-logo span{color:#f59e0b}
+  .hdr-r{text-align:right}
+  .hdr-title{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700}
+  .hdr-sub{font-size:11px;opacity:.8;margin-top:2px}
+  .hdr-meta{font-size:10px;opacity:.6;margin-top:2px}
+  .mode-badge{display:inline-block;background:rgba(255,255,255,.2);border-radius:4px;padding:2px 8px;font-size:10px;margin-top:4px}
+  table{width:100%;border-collapse:collapse;box-shadow:0 1px 6px rgba(0,0,0,.08)}
+  .footer{text-align:center;font-size:9px;color:#94a3b8;margin-top:10px;padding-top:6px;border-top:1px solid #f1f5f9}
+  .print-btn{display:flex;align-items:center;gap:8px;margin:0 auto 14px;padding:11px 24px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+  .print-btn:hover{background:#6d28d9}
+</style>
+</head>
+<body>
+<button class="print-btn no-print" onclick="window.print()">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  Принтирай / Запази като PDF
+</button>
+<div class="wrap">
+  <div class="hdr">
+    <div class="hdr-logo">AGG<span>·</span>SCORE</div>
+    <div class="hdr-r">
+      <div class="hdr-title">${S.compName||'AGG Турнир'}${catTitle}</div>
+      <div class="hdr-sub">📍 ${S.compPlace||'—'} &nbsp;·&nbsp; 📅 ${S.compDate||'—'}</div>
+      <div class="hdr-meta">Генерирано: ${now} &nbsp;·&nbsp; ${ori==='landscape'?'A4 Пейзаж':'A4 Портрет'}</div>
+      <div class="mode-badge">${modeLabel}</div>
+    </div>
+  </div>
+  ${legendHTML}
+  <table>
+    <thead>${buildHeader()}</thead>
+    <tbody>${tableBody}</tbody>
+  </table>
+  <div class="footer">AGG Score · ${S.compName||''} ${S.compDate||''}</div>
+</div>
+</body>
+</html>`;
+
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  toast('✅ PDF прозорецът е отворен');
+}
+
+// ═══════════════════════════════════════
+// ═══════════════════════════════════════
+// EDIT SCORE
+// ═══════════════════════════════════════
+let _editCtx = null; // {teamId, type, judgeNum}
+let _editRaw = '';
+
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+function openEditScore(teamId, type, judgeNum){
+  const team=S.teams.find(t=>t.id===teamId);
+  if(!team) return;
+  const cfg=SCORE_CFG[type];
+  const key=type+judgeNum;
+  const current=S.scores[teamId]?.[key];
+
+  _editCtx={teamId, type, judgeNum};
+  _editRaw='';
+
+  document.getElementById('edit-modal-title').textContent=`Редакция: ${cfg.label} – Съдия ${judgeNum}`;
+  document.getElementById('edit-modal-info').innerHTML=
+    `<strong style="color:var(--text)">${team.name}</strong><br>${team.club} · <span class="pill pp">${team.cat}</span>`;
+  document.getElementById('edit-current-val').textContent=current!==undefined?current.toFixed(3):'няма';
+  document.getElementById('edit-new-val').textContent='0.000';
+  document.getElementById('edit-max-lbl').textContent='Максимум: '+cfg.max+'.000';
+
+  // Build numpad
+  const keys=['7','8','9','4','5','6','1','2','3','CLR','0','.','⌫'];
+  document.getElementById('edit-numpad').innerHTML=keys.map(k=>{
+    let cls='nb';
+    if(k==='CLR') cls+=' clr';
+    else if(k==='⌫') cls+=' bksp';
+    else if(k==='.') cls+=' dot';
+    return `<button class="${cls}" ontouchstart="" onclick="editNumPress('${k}')" style="padding:18px 8px;font-size:22px">${k}</button>`;
+  }).join('');
+
+  document.getElementById('modal-edit-score').classList.add('open');
+}
+
+function editNumPress(key){
+  const cfg=SCORE_CFG[_editCtx?.type]||{max:10};
+  if(key==='CLR'){ _editRaw=''; }
+  else if(key==='⌫'){ _editRaw=_editRaw.slice(0,-1); }
+  else if(key==='.'&&_editRaw.includes('.')){ return; }
+  else { if(_editRaw.length<6) _editRaw+=key; }
+  const val=Math.min(parseFloat(_editRaw)||0, cfg.max);
+  document.getElementById('edit-new-val').textContent=_editRaw===''?'0.000':val.toFixed(3);
+}
+
+function clearEditScore(){
+  if(!_editCtx) return;
+  const {teamId, type, judgeNum}=_editCtx;
+  if(!confirm('Изтриване на оценката?')) return;
+  if(S.scores[teamId]) delete S.scores[teamId][type+judgeNum];
+  saveState();
+  closeModal('modal-edit-score');
+  renderCurrentChips();
+  renderLive();
+  toast('🗑 Оценката е изтрита','var(--red)');
+}
+
+function saveEditScore(){
+  if(!_editCtx) return;
+  const {teamId, type, judgeNum}=_editCtx;
+  const cfg=SCORE_CFG[type];
+  const val=Math.min(parseFloat(_editRaw)||0, cfg.max);
+  if(!S.scores[teamId]) S.scores[teamId]={};
+  S.scores[teamId][type+judgeNum]=val;
+  saveState();
+  closeModal('modal-edit-score');
+  renderCurrentChips();
+  renderLive();
+  toast(`✅ ${cfg.label} Съдия ${judgeNum} = ${val.toFixed(3)} (коригирано)`,'var(--blue)');
+}
+
+
+// ── Keyboard support for edit score modal ────────────────────────
+document.addEventListener('keydown', function(e){
+  const modal = document.getElementById('modal-edit-score');
+  if(!modal || !modal.classList.contains('open')) return;
+  if(e.key >= '0' && e.key <= '9'){ editNumPress(e.key); return; }
+  if(e.key === '.'){ editNumPress('.'); return; }
+  if(e.key === 'Backspace'){ editNumPress('⌫'); e.preventDefault(); return; }
+  if(e.key === 'Delete' || e.key === 'Escape' && e.shiftKey){ editNumPress('CLR'); return; }
+  if(e.key === 'Enter'){ saveEditScore(); return; }
+  if(e.key === 'Escape'){ closeModal('modal-edit-score'); return; }
+});
+
+// ═══════════════════════════════════════
+// JUDGE URL & QR CODE
+// ═══════════════════════════════════════
+// Cache the real server IP (fetched once from /api/info)
+let _serverIP = null;
+
+async function fetchServerIP(){
+  if(_serverIP) return _serverIP;
+  try{
+    const r = await fetch('/api/info');
+    const d = await r.json();
+    _serverIP = d.ips?.[0] || location.hostname;
+  }catch(e){
+    _serverIP = location.hostname;
+  }
+  return _serverIP;
+}
+
+function getJudgeBaseURL(){
+  // PRIORITY 1: manual override from Settings field
+  const override=(document.getElementById('judge-url-override')?.value||'').trim()
+    || (localStorage.getItem('agg_judge_url_override')||'').trim();
+  if(override) return override;
+
+  if(location.protocol==='file:') return null;
+
+  // HTTPS (GitHub Pages, Netlify) — never add port
+  if(location.protocol==='https:'){
+    const href=location.href.split('?')[0].split('#')[0];
+    if(href.endsWith('agg-admin.html'))
+      return href.replace('agg-admin.html','agg-judge.html');
+    const dir=href.endsWith('/')?href:href.substring(0,href.lastIndexOf('/')+1);
+    return dir+'agg-judge.html';
+  }
+
+  // HTTP with port → local node server
+  if(location.port){
+    const host=_serverIP||location.hostname;
+    return `http://${host}:${location.port}/judge`;
+  }
+
+  const href=location.href.split('?')[0].split('#')[0];
+  if(href.endsWith('agg-admin.html'))
+    return href.replace('agg-admin.html','agg-judge.html');
+  const dir=href.endsWith('/')?href:href.substring(0,href.lastIndexOf('/')+1);
+  return dir+'agg-judge.html';
+}
+
+function buildJudgeURL(type, num, name){
+  const base=getJudgeBaseURL();
+  if(!base) return null;
+  const p=new URLSearchParams({type, num});
+  if(name) p.set('name', name);
+  return base+'?'+p.toString();
+}
+
+function getUniversalJudgeURL(){
+  return getJudgeBaseURL();
+}
+
+function showUniversalQR(){
+  const modal=document.getElementById('modal-qr');
+  const img=document.getElementById('qr-canvas');
+  const badge=document.getElementById('qr-type-badge');
+  const urlLabel=document.getElementById('qr-url-label');
+  document.getElementById('qr-modal-title').textContent='📱 QR за всички съдии';
+  modal.classList.add('open');
+
+  // PRIORITY 1: manual override from Settings
+  const override=(document.getElementById('judge-url-override')?.value||'').trim()
+    || (localStorage.getItem('agg_judge_url_override')||'').trim();
+
+  function renderQR(url){
+    urlLabel.textContent=url;
+    badge.innerHTML=`<div style="font-size:12px;color:var(--green);font-weight:600">✅ Съдиите избират сами типа и номера си</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">Всички устройства трябва да са на ЕДНА WiFi мрежа</div>`;
+    img.style.display='block';
+    const enc=encodeURIComponent(url);
+    img.src=`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${enc}&margin=10&color=000000&bgcolor=ffffff&ecc=H`;
+    img.onerror=()=>{
+      img.src=`https://chart.googleapis.com/chart?cht=qr&chs=260x260&chl=${enc}&choe=UTF-8`;
+    };
+    const manEl=document.getElementById('qr-manual-url');
+    if(manEl){ manEl.textContent=url; manEl.style.display='block'; }
+  }
+
+  if(override){
+    renderQR(override);
+    return;
+  }
+
+  if(location.protocol==='file:'){
+    img.style.display='none';
+    badge.innerHTML=`<div style="background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:10px;padding:14px">
+      <div style="font-weight:700;color:var(--red);margin-bottom:8px">⚠️ Въведи Judge URL в Настройки</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.8">
+        Отиди в <strong style="color:var(--text)">⚙ Настройки → Синхронизация</strong><br>
+        и въведи в полето <strong style="color:var(--text)">„Judge URL"</strong>:<br>
+        <code style="background:var(--surface);padding:4px 8px;border-radius:5px;display:block;margin:6px 0;word-break:break-all">https://stanislava85t.github.io/Judge-system/agg-judge.html</code>
+        или за локален сървър:<br>
+        <code style="background:var(--surface);padding:4px 8px;border-radius:5px;display:block;margin:6px 0">http://localhost:3000/admin</code>
+      </div>
+    </div>`;
+    urlLabel.textContent='';
+    return;
+  }
+
+  badge.innerHTML='<span style="font-size:12px;color:var(--muted)">⏳ Определяне на IP адреса…</span>';
+
+  fetchServerIP().then(ip=>{
+    const port=location.port||'3000';
+    const url=`http://${ip}:${port}/judge`;
+    renderQR(url);
+  });
+}
+
+function showJudgeQRManual(){
+  const type=document.getElementById('ctrl-judge-type')?.value||'TV';
+  const num=document.getElementById('ctrl-judge-num')?.value||'1';
+  const name=document.getElementById('ctrl-judge-name')?.value||'';
+  const modal=document.getElementById('modal-qr');
+  const img=document.getElementById('qr-canvas');
+  const badge=document.getElementById('qr-type-badge');
+  const cfg=TYPE_COLORS_QR[type]||{bg:'#f1f5f9',color:'#334155'};
+  const labels={TV:'TV',AV:'AV',AVA:'AV-A',AVB:'AV-B',EXE:'EXE'};
+  document.getElementById('qr-modal-title').textContent=`${labels[type]||type} — Съдия ${num}`;
+  modal.classList.add('open');
+
+  if(location.protocol==='file:'){
+    img.style.display='none';
+    badge.innerHTML=`<div style="color:var(--red);font-size:12px">⚠️ Стартирай node server.js за QR</div>`;
+    document.getElementById('qr-url-label').textContent='';
+    return;
+  }
+
+  fetchServerIP().then(ip=>{
+    const port=location.port||'3000';
+    const p=new URLSearchParams({type,num});
+    if(name) p.set('name',name);
+    const url=`http://${ip}:${port}/judge?${p}`;
+    document.getElementById('qr-url-label').textContent=url;
+    badge.innerHTML=`<span style="background:${cfg.bg};color:${cfg.color};padding:5px 16px;border-radius:8px;font-size:15px;font-weight:700">${labels[type]||type} Съдия ${num}</span>`;
+    img.style.display='block';
+    const enc=encodeURIComponent(url);
+    img.src=`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${enc}&margin=6&color=000000&bgcolor=ffffff`;
+    img.onerror=()=>{
+      img.src=`https://chart.googleapis.com/chart?cht=qr&chs=240x240&chl=${enc}&choe=UTF-8`;
+    };
+  });
+}
+
+// Keep for backwards compat
+function showJudgeQR(type){
+  document.getElementById('ctrl-judge-type').value=type;
+  showJudgeQRManual();
+}
+function renderQRModal(type,num,name){ showJudgeQRManual(); }
+
+const TYPE_COLORS_QR={
+  TV:{bg:'#fef9c3',color:'#a16207'},
+  AV:{bg:'#dbeafe',color:'#1e40af'},
+  AVA:{bg:'#ede9fe',color:'#6d28d9'},
+  AVB:{bg:'#dcfce7',color:'#166534'},
+  EXE:{bg:'#fce7f3',color:'#9d174d'},
+};
+
+function updateJudgeURL(){
+  const type=document.getElementById('ctrl-judge-type')?.value||'TV';
+  const num=document.getElementById('ctrl-judge-num')?.value||'1';
+  const name=document.getElementById('ctrl-judge-name')?.value||'';
+  const url=buildJudgeURL(type,num,name);
+  const el=document.getElementById('judge-url-display');
+  if(el) el.textContent=url;
+}
+
+function copyJudgeURL(){
+  const type=document.getElementById('ctrl-judge-type').value;
+  const num=document.getElementById('ctrl-judge-num').value;
+  const name=document.getElementById('ctrl-judge-name').value;
+  navigator.clipboard.writeText(buildJudgeURL(type,num,name))
+    .then(()=>toast('📋 URL копиран!'))
+    .catch(()=>toast('⚠️ Грешка при копиране','var(--red)'));
+}
+
+function copyJudgeURLFromModal(){
+  const url=document.getElementById('qr-url-label').textContent;
+  navigator.clipboard.writeText(url)
+    .then(()=>toast('📋 URL копиран!'))
+    .catch(()=>toast('⚠️ Грешка','var(--red)'));
+}
+
+// ═══════════════════════════════════════
+// OPEN JUDGE TAB
+function openJudgeTab(){
+  const type=document.getElementById('ctrl-judge-type').value;
+  const num=document.getElementById('ctrl-judge-num').value;
+  const name=document.getElementById('ctrl-judge-name').value;
+  // Store params for judge page
+  const params=new URLSearchParams({type,num,name});
+  window.open('agg-judge.html?'+params.toString(),'_blank');
+  toast('🎯 Съдийски прозорец отворен');
+}
+
+
+// ═══════════════════════════════════════
+// ═══════════════════════════════════════
+// ENTRIES
+// ═══════════════════════════════════════
+const DEFAULT_CATS=['6-8','8-10','10-12','12-14','Девойки','Жени','Open'];
+
+// ═══════════════════════════════════════
+// IMPORT FROM EXCEL / CSV / PDF
+// ═══════════════════════════════════════
+
+// Load SheetJS lazily
+function loadSheetJS(cb){
+  if(window.XLSX){cb();return;}
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  s.onload=cb;
+  document.head.appendChild(s);
+}
+
+let _importRows=[]; // pending import data
+
+// Drag-and-drop
+function importDragOver(e){
+  e.preventDefault();
+  document.getElementById('import-dropzone').style.borderColor='var(--accent)';
+  document.getElementById('import-dropzone').style.background='rgba(124,58,237,.07)';
+}
+function importDragLeave(e){
+  document.getElementById('import-dropzone').style.borderColor='var(--border)';
+  document.getElementById('import-dropzone').style.background='';
+}
+function importDrop(e){
+  e.preventDefault();
+  importDragLeave(e);
+  const file=e.dataTransfer.files[0];
+  if(file) processImportFile(file);
+}
+function handleImportFile(e){
+  const file=e.target.files[0];
+  if(file) processImportFile(file);
+  e.target.value='';
+}
+
+function setImportStatus(msg, color='var(--muted)'){
+  const el=document.getElementById('import-status-bar');
+  el.style.display='block';
+  el.innerHTML=`<div style="padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;background:${color==='ok'?'rgba(16,185,129,.1)':color==='err'?'rgba(239,68,68,.1)':'rgba(59,130,246,.1)'};color:${color==='ok'?'var(--green)':color==='err'?'var(--red)':'var(--blue)'};border:1px solid ${color==='ok'?'var(--green)':color==='err'?'var(--red)':'rgba(59,130,246,.3)'}">${msg}</div>`;
+}
+
+function processImportFile(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  setImportStatus('⏳ Зарежда се файлът…');
+  if(ext==='pdf'){
+    importFromPDF(file);
+  } else {
+    loadSheetJS(()=>importFromSpreadsheet(file, ext));
+  }
+}
+
+// ── Excel / CSV ──────────────────────────────────────────────────────
+const COL_ALIASES={
+  name:   ['наименование','отбор','name','team','екип','клуб_отбор','club_team','title'],
+  club:   ['клуб','club','организация','organisation','organization','федерация'],
+  country:['държава','country','nation','страна','nat'],
+  cat:    ['категория','category','age','възраст','age group','група','group','cat'],
+  gymnasts:['гимнастички','gymnasts','брой','count','number','participants','num'],
+  coach:  ['треньор','coach','instructor','обучител','треньори'],
+  contact:['телефон','email','contact','phone','tel','контакт'],
+  note:   ['бележка','note','notes','забележка','comment'],
+};
+
+function detectColumn(header){
+  const h=header.toLowerCase().trim();
+  for(const [field, aliases] of Object.entries(COL_ALIASES)){
+    if(aliases.some(a=>h.includes(a))) return field;
+  }
+  return null;
+}
+
+const VALID_CATS=['6-8','8-10','10-12','12-14','Девойки','Жени','Open'];
+
+function normalizeCat(raw){
+  if(!raw) return '';
+  const r=String(raw).trim();
+  // direct match
+  if(VALID_CATS.includes(r)) return r;
+  const rl=r.toLowerCase();
+  if(rl.includes('жен') && !rl.includes('девой')) return 'Жени';
+  if(rl.includes('девой')) return 'Девойки';
+  if(rl.includes('open') || rl.includes('откр')) return 'Open';
+  // numeric ranges
+  const nums=r.match(/(\d+)\s*[-–—]\s*(\d+)/);
+  if(nums){
+    const key=nums[1]+'-'+nums[2];
+    if(VALID_CATS.includes(key)) return key;
+  }
+  // single age → map to range
+  const single=parseInt(r);
+  if(!isNaN(single)){
+    if(single>=6&&single<8)  return '6-8';
+    if(single>=8&&single<10) return '8-10';
+    if(single>=10&&single<12)return '10-12';
+    if(single>=12&&single<14)return '12-14';
+  }
+  return r; // keep original, user will fix
+}
+
+function importFromSpreadsheet(file, ext){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      if(data.length<2){setImportStatus('⚠️ Файлът е празен или неразпознат','err');return;}
+
+      const headers=data[0].map(String);
+      const colMap={};
+      headers.forEach((h,i)=>{
+        const field=detectColumn(h);
+        if(field && !(field in colMap)) colMap[field]=i;
+      });
+
+      if(!('name' in colMap)){
+        setImportStatus('❌ Не е намерена колона с наименование на отбора. Провери заглавните редове.','err');
+        return;
+      }
+
+      const rows=data.slice(1).map((row,ri)=>{
+        const name=String(row[colMap.name]||'').trim();
+        if(!name) return null;
+        return {
+          _ri:ri, ok:true,
+          name,
+          club:  colMap.club!==undefined?String(row[colMap.club]||'').trim():'',
+          country:colMap.country!==undefined?String(row[colMap.country]||'').trim():'',
+          cat:   normalizeCat(colMap.cat!==undefined?row[colMap.cat]:''),
+          gymnasts:parseInt(colMap.gymnasts!==undefined?row[colMap.gymnasts]:0)||6,
+          coach: colMap.coach!==undefined?String(row[colMap.coach]||'').trim():'',
+          contact:colMap.contact!==undefined?String(row[colMap.contact]||'').trim():'',
+          note:  colMap.note!==undefined?String(row[colMap.note]||'').trim():'',
+        };
+      }).filter(Boolean);
+
+      if(!rows.length){setImportStatus('⚠️ Няма валидни редове','err');return;}
+      setImportStatus(`✅ Разпознати ${rows.length} реда от "${file.name}"`, 'ok');
+      openImportPreview(rows, headers, colMap);
+    }catch(err){
+      setImportStatus('❌ Грешка при четене: '+err.message,'err');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── PDF via Claude AI ─────────────────────────────────────────────────
+function importFromPDF(file){
+  setImportStatus('⏳ Анализиране на PDF с AI…');
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const base64=btoa(String.fromCharCode(...new Uint8Array(e.target.result)));
+    try{
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-6',
+          max_tokens:2000,
+          messages:[{role:'user',content:[
+            {type:'document',source:{type:'base64',media_type:'application/pdf',data:base64}},
+            {type:'text',text:`Extract all gymnastics team entries from this PDF.
+Return ONLY a JSON array, no markdown, no explanation.
+Each item: {"name":"team name","club":"club/org","country":"","cat":"age category","gymnasts":6,"coach":"","contact":"","note":""}
+For cat use exactly: 6-8, 8-10, 10-12, 12-14, Девойки, Жени, Open — or the raw text if unclear.
+If a field is missing use empty string. gymnasts default 6.`}
+          ]}]
+        })
+      });
+      const data=await resp.json();
+      const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+      const clean=text.replace(/```json|```/g,'').trim();
+      const rows=JSON.parse(clean);
+      if(!Array.isArray(rows)||!rows.length) throw new Error('Не са намерени отбори');
+      const mapped=rows.map((r,ri)=>({
+        _ri:ri, ok:true,
+        name:String(r.name||'').trim(),
+        club:String(r.club||'').trim(),
+        country:String(r.country||'').trim(),
+        cat:normalizeCat(r.cat),
+        gymnasts:parseInt(r.gymnasts)||6,
+        coach:String(r.coach||'').trim(),
+        contact:String(r.contact||'').trim(),
+        note:String(r.note||'').trim(),
+      })).filter(r=>r.name);
+      setImportStatus(`✅ AI разпозна ${mapped.length} отбора от PDF-а`,'ok');
+      openImportPreview(mapped, null, null);
+    }catch(err){
+      setImportStatus('❌ AI грешка: '+err.message+'. Опитай с Excel/CSV.','err');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── Preview modal ──────────────────────────────────────────────────────
+function openImportPreview(rows, headers, colMap){
+  _importRows=rows.map(r=>({...r}));
+  const catOpts=VALID_CATS.map(c=>`<option value="${c}">${c}</option>`).join('');
+
+  const thStyle='background:var(--surface);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap';
+  const head=`<tr>
+    <th style="${thStyle}">✓</th>
+    <th style="${thStyle}">Наименование</th>
+    <th style="${thStyle}">Клуб</th>
+    <th style="${thStyle}">Категория</th>
+    <th style="${thStyle}">Гим.</th>
+    <th style="${thStyle}">Треньор</th>
+  </tr>`;
+  document.getElementById('import-preview-head').innerHTML=head;
+
+  function renderBody(){
+    const tdS='padding:6px 8px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle';
+    document.getElementById('import-preview-body').innerHTML=_importRows.map((r,i)=>`
+      <tr style="background:${r.ok?'':'rgba(239,68,68,.06)'}">
+        <td style="${tdS}">
+          <input type="checkbox" ${r.ok?'checked':''} onchange="_importRows[${i}].ok=this.checked;renderImportBody()">
+        </td>
+        <td style="${tdS};font-weight:600">${r.name||'<span style="color:var(--red)">❌ празно</span>'}</td>
+        <td style="${tdS};color:var(--muted)">${r.club}${r.country?' / '+r.country:''}</td>
+        <td style="${tdS}">
+          <select onchange="_importRows[${i}].cat=this.value"
+            style="background:var(--surface);border:1px solid var(--border);border-radius:6px;color:${VALID_CATS.includes(r.cat)?'var(--text)':'var(--red)'};padding:3px 6px;font-size:11px;width:100%">
+            <option value="${r.cat}" ${!VALID_CATS.includes(r.cat)?'selected':''}>
+              ${r.cat||'— избери —'}
+            </option>
+            ${catOpts}
+          </select>
+        </td>
+        <td style="${tdS};text-align:center">${r.gymnasts}</td>
+        <td style="${tdS};color:var(--muted)">${r.coach}</td>
+      </tr>`).join('');
+  }
+  window.renderImportBody=renderBody;
+  renderBody();
+
+  const valid=rows.filter(r=>r.ok&&r.name).length;
+  document.getElementById('import-summary').innerHTML=
+    `<span style="color:var(--green);font-weight:600">${valid} отбора готови за импорт</span>` +
+    (rows.some(r=>!VALID_CATS.includes(r.cat))?` · <span style="color:var(--gold)">⚠️ Провери категориите в жълто/червено</span>`:'');
+
+  document.getElementById('modal-import').classList.add('open');
+}
+
+function confirmImport(){
+  const toAdd=_importRows.filter(r=>r.ok&&r.name);
+  if(!toAdd.length){toast('⚠️ Няма валидни редове','var(--red)');return;}
+  if(!S.entries) S.entries=[];
+  let added=0;
+  toAdd.forEach(r=>{
+    S.entries.push({
+      id:'e'+Date.now()+Math.random().toString(36).slice(2,6),
+      name:r.name, club:r.club, country:r.country,
+      cat:VALID_CATS.includes(r.cat)?r.cat:'Open',
+      gymnasts:r.gymnasts||6, coach:r.coach,
+      contact:r.contact, note:r.note,
+      regTime:Date.now()
+    });
+    added++;
+  });
+  saveState();
+  closeModal('modal-import');
+  renderEntries();
+  updateEntryCatFilter();
+  renderRotationCatSelect();
+  _importRows=[];
+  setImportStatus(`✅ Импортирани ${added} отбора успешно!`,'ok');
+  toast(`✅ Импортирани ${added} отбора`,'var(--green)');
+}
+
+function addEntry(){
+  const name=document.getElementById('e-name').value.trim();
+  const club=document.getElementById('e-club').value.trim();
+  const country=document.getElementById('e-country').value.trim();
+  const cat=document.getElementById('e-cat').value;
+  const gymnasts=parseInt(document.getElementById('e-gymnasts').value)||6;
+  const coach=document.getElementById('e-coach').value.trim();
+  const contact=document.getElementById('e-contact').value.trim();
+  const note=document.getElementById('e-note').value.trim();
+  if(!name){toast('⚠️ Въведете наименование','var(--red)');return;}
+  if(!S.entries) S.entries=[];
+  const id='e'+Date.now();
+  S.entries.push({id,name,club,country,cat,gymnasts,coach,contact,note,regTime:Date.now()});
+  saveState();
+  renderEntries();
+  updateEntryCatFilter();
+  renderRotationCatSelect();
+  ['e-name','e-club','e-country','e-coach','e-contact','e-note'].forEach(i=>document.getElementById(i).value='');
+  toast('✅ Заявката е добавена: '+name);
+}
+
+function removeEntry(id){
+  if(!confirm('Изтриване на заявката?'))return;
+  S.entries=(S.entries||[]).filter(e=>e.id!==id);
+  saveState();
+  renderEntries();
+  updateEntryCatFilter();
+  renderRotationCatSelect();
+}
+
+function renderEntries(){
+  const entries=S.entries||[];
+  document.getElementById('entry-count-lbl').textContent=entries.length;
+  const cat=document.getElementById('entry-cat-filter')?.value||'';
+  const filtered=cat?entries.filter(e=>e.cat===cat):entries;
+  const el=document.getElementById('entry-list');
+  if(!filtered.length){el.innerHTML='<p style="color:var(--muted);font-size:12px">Няма заявки</p>';return;}
+  const cats=[...new Set(filtered.map(e=>e.cat))];
+  const catColors={'6-8':'rgba(29,78,216,.1)','8-10':'rgba(16,185,129,.1)','10-12':'rgba(124,58,237,.1)','12-14':'rgba(236,72,153,.1)','Девойки':'rgba(245,158,11,.1)','Жени':'rgba(239,68,68,.1)','Open':'rgba(148,163,184,.1)'};
+  el.innerHTML=cats.map(c=>{
+    const group=filtered.filter(e=>e.cat===c);
+    const bg=catColors[c]||'rgba(148,163,184,.1)';
+    const rows=group.map(e=>`
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:8px 10px;border-bottom:1px solid var(--border);gap:8px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600">${e.name}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.6">
+            ${e.club}${e.country?' · '+e.country:''} · ${e.gymnasts} гим.
+            ${e.coach?'<br>🧑‍🏫 '+e.coach:''}
+            ${e.contact?'<br>📞 '+e.contact:''}
+            ${e.note?'<br>📎 '+e.note:''}
+          </div>
+        </div>
+        <button class="btn btn-danger btn-sm" style="flex-shrink:0" onclick="removeEntry('${e.id}')">✕</button>
+      </div>`).join('');
+    return `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px">
+      <div style="background:${bg};padding:6px 12px;font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:1px;text-transform:uppercase;display:flex;justify-content:space-between">
+        <span>▸ ${c}</span><span style="color:var(--muted)">${group.length} отбора</span>
+      </div>
+      ${rows}
+    </div>`;
+  }).join('');
+}
+
+function updateEntryCatFilter(){
+  const cats=[...new Set((S.entries||[]).map(e=>e.cat))];
+  const sel=document.getElementById('entry-cat-filter');
+  if(!sel) return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Всички категории</option>'+cats.map(c=>`<option>${c}</option>`).join('');
+  if(cats.includes(cur)) sel.value=cur;
+}
+
+// ── Rotation cat select ──
+function renderRotationCatSelect(){
+  const usedCats=[...new Set((S.entries||[]).map(e=>e.cat))];
+  const sel=document.getElementById('rot-cats');
+  if(!sel) return;
+  const prev=[...sel.selectedOptions].map(o=>o.value);
+  sel.innerHTML=usedCats.map(c=>`<option value="${c}" ${prev.includes(c)?'selected':''}>${c} (${(S.entries||[]).filter(e=>e.cat===c).length} отб.)</option>`).join('');
+}
+
+// ── Rotations CRUD ──
+
+// ── Edit Rotation ──────────────────────────────────────────────────
+let _editRotId=null;
+
+function openEditRotation(rotId){
+  const rot=(S.rotations||[]).find(r=>r.id===rotId);
+  if(!rot) return;
+  _editRotId=rotId;
+  document.getElementById('edit-rot-title').textContent='✏️ '+rot.name;
+  document.getElementById('edit-rot-name').value=rot.name;
+  const allCats=[...new Set([...VALID_CATS,...(S.entries||[]).map(e=>e.cat)])];
+  document.getElementById('edit-rot-cats').innerHTML=allCats.map(c=>
+    `<option value="${c}" ${(rot.cats||[]).includes(c)?'selected':''}>${c}</option>`).join('');
+  const rotTeams=S.teams.filter(t=>t.rotationId===rotId&&!t.isPause).sort((a,b)=>a.order-b.order);
+  const sec=document.getElementById('edit-rot-teams-section');
+  if(rotTeams.length){sec.style.display='block';renderEditRotTeams(rotTeams);}
+  else{sec.style.display='none';document.getElementById('edit-rot-teams-list').innerHTML='';}
+  document.getElementById('modal-edit-rotation').classList.add('open');
+}
+
+function renderEditRotTeams(teams){
+  document.getElementById('edit-rot-teams-list').innerHTML=teams.map((t,i)=>`
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+      <span style="font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--gold);min-width:22px">${i+1}.</span>
+      <div style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 10px;min-width:0">
+        <div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name}</div>
+        <div style="font-size:10px;color:var(--muted)">${t.cat} · ${t.club}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0">
+        <button class="btn btn-ghost btn-sm" onclick="reorderTeamInRot('${t.id}',-1)" ${i===0?'disabled':''} style="padding:2px 7px;font-size:11px;line-height:1.4">▲</button>
+        <button class="btn btn-ghost btn-sm" onclick="reorderTeamInRot('${t.id}',1)" ${i===teams.length-1?'disabled':''} style="padding:2px 7px;font-size:11px;line-height:1.4">▼</button>
+      </div>
+    </div>`).join('');
+}
+
+function reorderTeamInRot(teamId, dir){
+  const rotId=_editRotId;
+  const rotTeams=S.teams.filter(t=>t.rotationId===rotId&&!t.isPause).sort((a,b)=>a.order-b.order);
+  const idx=rotTeams.findIndex(t=>t.id===teamId);
+  const ni=idx+dir;
+  if(ni<0||ni>=rotTeams.length) return;
+  const tmp=rotTeams[idx].order;
+  rotTeams[idx].order=rotTeams[ni].order;
+  rotTeams[ni].order=tmp;
+  saveState();
+  const updated=S.teams.filter(t=>t.rotationId===rotId&&!t.isPause).sort((a,b)=>a.order-b.order);
+  renderEditRotTeams(updated);
+  renderStartOrderList();
+  renderCtrlRotations();
+}
+
+function saveEditRotation(){
+  if(!_editRotId) return;
+  const rot=(S.rotations||[]).find(r=>r.id===_editRotId);
+  if(!rot) return;
+  const newName=document.getElementById('edit-rot-name').value.trim();
+  const sel=document.getElementById('edit-rot-cats');
+  const newCats=[...sel.selectedOptions].map(o=>o.value);
+  if(!newCats.length){toast('⚠️ Изберете поне една категория','var(--red)');return;}
+  const others=(S.rotations||[]).filter(r=>r.id!==_editRotId&&r.type!=='pause');
+  const usedElsewhere=others.flatMap(r=>r.cats||[]);
+  const conflict=newCats.filter(c=>usedElsewhere.includes(c));
+  if(conflict.length){toast('⚠️ '+conflict[0]+' вече е в друга ротация','var(--red)');return;}
+  rot.name=newName||rot.name;
+  rot.cats=newCats;
+  S.teams.filter(t=>t.rotationId===_editRotId).forEach(t=>{t.rotationName=rot.name;});
+  saveState();
+  closeModal('modal-edit-rotation');
+  renderRotationList();
+  renderRotationCatSelect();
+  renderDrawPreview();
+  renderCtrlRotations();
+  toast('✅ Ротацията е запазена: '+rot.name);
+}
+
+function addPause(){
+  const minutes=parseInt(document.getElementById('pause-minutes').value)||15;
+  const note=document.getElementById('pause-note').value.trim();
+  if(!S.rotations) S.rotations=[];
+  const id='pause'+Date.now();
+  S.rotations.push({id, type:'pause', minutes, note});
+  saveState();
+  renderRotationList();
+  document.getElementById('pause-minutes').value='15';
+  document.getElementById('pause-note').value='';
+  toast('⏸ Паузата е добавена');
+}
+
+function editPause(id){
+  const p=S.rotations.find(r=>r.id===id);
+  if(!p) return;
+  const m=prompt('Продължителност (мин):', p.minutes);
+  if(m===null) return;
+  const n=prompt('Описание:', p.note||'');
+  p.minutes=parseInt(m)||p.minutes;
+  p.note=n||'';
+  saveState();
+  renderRotationList();
+  toast('✅ Паузата е обновена');
+}
+
+function addRotation(){
+  const name=document.getElementById('rot-name').value.trim();
+  const sel=document.getElementById('rot-cats');
+  const cats=[...sel.selectedOptions].map(o=>o.value);
+  if(!cats.length){toast('⚠️ Изберете поне една категория','var(--red)');return;}
+  if(!S.rotations) S.rotations=[];
+  const allUsed=S.rotations.filter(r=>r.type==='rotation').flatMap(r=>r.cats);
+  const overlap=cats.filter(c=>allUsed.includes(c));
+  if(overlap.length){toast('⚠️ Категория '+overlap[0]+' вече е в друга ротация','var(--red)');return;}
+  const rotCount=S.rotations.filter(r=>r.type==='rotation').length;
+  const id='rot'+Date.now();
+  S.rotations.push({id, type:'rotation', name:name||('Ротация '+(rotCount+1)), cats});
+  saveState();
+  renderRotationList();
+  document.getElementById('rot-name').value='';
+  [...sel.options].forEach(o=>o.selected=false);
+  toast('✅ Ротацията е добавена');
+}
+
+function editPause(id){
+  const r=S.rotations.find(x=>x.id===id);
+  if(!r) return;
+  const mins=prompt('Продължителност (мин):', r.minutes);
+  if(mins===null) return;
+  const note=prompt('Описание:', r.note||'');
+  if(note===null) return;
+  r.minutes=parseInt(mins)||r.minutes;
+  r.note=note;
+  saveState();
+  renderRotationList();
+  toast('✅ Паузата е обновена');
+}
+
+function removeRotation(id){
+  S.rotations=(S.rotations||[]).filter(r=>r.id!==id);
+  saveState();
+  renderRotationList();
+}
+
+function moveRotation(id, dir){
+  const rots=S.rotations||[];
+  const idx=rots.findIndex(r=>r.id===id);
+  const ni=idx+dir;
+  if(ni<0||ni>=rots.length) return;
+  [rots[idx],rots[ni]]=[rots[ni],rots[idx]];
+  saveState();
+  renderRotationList();
+}
+
+function clearRotations(){
+  if(!confirm('Изтриване на всички ротации?')) return;
+  S.rotations=[];
+  saveState();
+  renderRotationList();
+  toast('🗑 Ротациите са изчистени');
+}
+
+const ROT_COLORS=['rgba(29,78,216,.15)','rgba(16,185,129,.15)','rgba(245,158,11,.15)','rgba(239,68,68,.15)','rgba(124,58,237,.15)','rgba(20,184,166,.15)'];
+const ROT_BORDER=['#3b82f6','#10b981','#f59e0b','#ef4444','#a855f7','#14b8a6'];
+
+function renderRotationList(){
+  const items=S.rotations||[];
+  const el=document.getElementById('rotation-list');
+  if(!el) return;
+  if(!items.length){
+    el.innerHTML='<p style="font-size:12px;color:var(--muted);margin-bottom:8px">Няма ротации — добави ротация и/или пауза</p>';
+    return;
+  }
+  let rotIdx=0;
+  el.innerHTML=items.map((r,i)=>{
+    const isFirst=i===0, isLast=i===items.length-1;
+    const arrows=`<div style="display:flex;gap:3px;flex-shrink:0">
+      <button class="btn btn-ghost btn-sm" onclick="moveRotation('${r.id}',-1)" ${isFirst?'disabled':''} style="padding:3px 6px">▲</button>
+      <button class="btn btn-ghost btn-sm" onclick="moveRotation('${r.id}',1)" ${isLast?'disabled':''} style="padding:3px 6px">▼</button>
+      <button class="btn btn-danger btn-sm" onclick="removeRotation('${r.id}')" style="padding:3px 6px">✕</button>
+    </div>`;
+
+    if(r.type==='pause'){
+      return `<div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(245,158,11,.08);border:1px dashed rgba(245,158,11,.5);border-radius:9px;margin-bottom:6px">
+        <span style="font-size:18px">⏸</span>
+        <div style="flex:1;min-width:0">
+          <span style="color:var(--gold);font-weight:700;font-size:13px">${r.minutes} мин</span>
+          ${r.note?`<span style="color:var(--muted);font-size:11px;margin-left:6px">${r.note}</span>`:''}
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="editPause('${r.id}')" style="padding:3px 7px;font-size:11px">✏️</button>
+        ${arrows}
+      </div>`;
+    }
+
+    const bg=ROT_COLORS[rotIdx%ROT_COLORS.length];
+    const bd=ROT_BORDER[rotIdx%ROT_BORDER.length];
+    const entryCount=(S.entries||[]).filter(e=>r.cats.includes(e.cat)).length;
+    const teamCount=S.teams.filter(t=>t.rotationId===r.id&&!t.isPause).length;
+    rotIdx++;
+    return `<div style="background:${bg};border:1px solid ${bd};border-radius:10px;padding:9px 12px;margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div style="flex:1;min-width:0;cursor:pointer" onclick="openEditRotation('${r.id}')">
+          <div style="font-weight:700;font-size:13px;color:var(--text)">${r.name}
+            <span style="font-size:10px;color:${bd};margin-left:6px;font-weight:400">✏️ редактирай</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">
+            ${r.cats.join(', ')} · <strong style="color:var(--text)">${entryCount} заявки${teamCount?' · '+teamCount+' в стартов ред':''}</strong>
+          </div>
+        </div>
+        <div style="display:flex;gap:3px;flex-shrink:0">
+          <button class="btn btn-ghost btn-sm" onclick="openEditRotation('${r.id}')" style="padding:3px 7px;font-size:11px" title="Редактирай">✏️</button>
+          ${arrows}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Draw ──
+function generateDraw(){
+  const entries=S.entries||[];
+  if(!entries.length){toast('⚠️ Няма заявки','var(--red)');return;}
+
+  const rots=S.rotations||[];
+  // Fallback: if no rotations defined, auto-create one per cat
+  const usedCats=[...new Set(entries.map(e=>e.cat))];
+  const realRots=rots.filter(r=>r.type!=='pause');
+  const rotsToDraw=realRots.length?rots:usedCats.map((c,i)=>({id:'auto'+i,type:'rotation',name:c,cats:[c]}));
+
+  if(!confirm(`Генериране на жребий за ${rotsToDraw.length} ротация/и? Това ще презапише текущите отбори!`)) return;
+
+  let startNum=1;
+  const newTeams=[];
+
+  rotsToDraw.forEach((item,ri)=>{
+    if(item.type==='pause'){
+      // standalone pause item
+      newTeams.push({
+        id:'pause_'+item.id, name:`⏸ Пауза ${item.minutes} мин${item.note?' – '+item.note:''}`,
+        club:'', cat:'__PAUSE__', order:startNum++, isPause:true, minutes:item.minutes
+      });
+      return;
+    }
+    // rotation — shuffle each cat
+    (item.cats||[]).forEach(cat=>{
+      const group=entries.filter(e=>e.cat===cat);
+      for(let i=group.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [group[i],group[j]]=[group[j],group[i]];
+      }
+      group.forEach(e=>{
+        newTeams.push({
+          id:'t'+e.id, name:e.name,
+          club:e.club+(e.country?' / '+e.country:''),
+          cat:e.cat, order:startNum++,
+          gymnasts:e.gymnasts, fromEntry:e.id,
+          rotationId:item.id, rotationName:item.name
+        });
+      });
+    });
+  });
+
+  S.teams=newTeams;
+  S.scores={};
+  S.finalized={};
+  S.activeStart=null;
+  newTeams.filter(t=>!t.isPause).forEach(t=>{ S.scores[t.id]={}; });
+  saveState();
+  renderAll();
+  renderDrawPreview();
+  const real=newTeams.filter(t=>!t.isPause).length;
+  toast(`🎲 Жребият е генериран — ${real} отбора`,'var(--gold)');
+}
+
+function renderDrawPreview(){
+  const el=document.getElementById('draw-preview');
+  if(!el) return;
+  if(!S.teams.length){el.innerHTML='';return;}
+
+  // group by rotation
+  const rots=[...new Set(S.teams.map(t=>t.rotationId||'__none__'))];
+  const allTeams=[...S.teams].sort((a,b)=>a.order-b.order);
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Стартов ред (пренареди с ▲▼)</div>
+      <button class="btn btn-ghost btn-sm" onclick="renumberAfterReorder()">🔢 Презапиши номерата</button>
+    </div>`+
+    allTeams.map((t,i)=>{
+      if(t.isPause){
+        return `<div style="background:rgba(245,158,11,.1);border:1px dashed var(--gold);border-radius:8px;padding:8px 12px;margin-bottom:4px;font-size:12px;color:var(--gold);font-weight:600">
+          ${t.name}
+        </div>`;
+      }
+      const rotColor=ROT_COLORS[rots.indexOf(t.rotationId||'__none__')%ROT_COLORS.length];
+      const rotBd=ROT_BORDER[rots.indexOf(t.rotationId||'__none__')%ROT_BORDER.length];
+      // find position within same cat for ▲▼
+      const catTeams=S.teams.filter(x=>x.cat===t.cat&&!x.isPause).sort((a,b)=>a.order-b.order);
+      const catIdx=catTeams.findIndex(x=>x.id===t.id);
+      return `<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px" data-id="${t.id}">
+        <span style="color:var(--gold);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;min-width:26px">${t.order}.</span>
+        <div style="flex:1;background:var(--surface);border:1px solid ${rotBd};border-left:3px solid ${rotBd};border-radius:7px;padding:5px 10px;font-size:12px;min-width:0">
+          <span style="font-weight:600">${t.name}</span>
+          <span style="color:var(--muted);font-size:10px;margin-left:6px">${t.cat}</span>
+          ${t.rotationName?`<span style="font-size:10px;color:${rotBd};margin-left:4px">${t.rotationName}</span>`:''}
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="reorderTeam('${t.id}','${t.cat}',-1)" ${catIdx===0?'disabled':''} style="padding:4px 7px">▲</button>
+        <button class="btn btn-ghost btn-sm" onclick="reorderTeam('${t.id}','${t.cat}',1)" ${catIdx===catTeams.length-1?'disabled':''} style="padding:4px 7px">▼</button>
+      </div>`;
+    }).join('');
+}
+
+function reorderTeam(teamId, cat, dir){
+  const catTeams=S.teams.filter(t=>t.cat===cat&&!t.isPause).sort((a,b)=>a.order-b.order);
+  const idx=catTeams.findIndex(t=>t.id===teamId);
+  const ni=idx+dir;
+  if(ni<0||ni>=catTeams.length) return;
+  const tmp=catTeams[idx].order;
+  catTeams[idx].order=catTeams[ni].order;
+  catTeams[ni].order=tmp;
+  saveState();
+  renderDrawPreview();
+  renderStartOrderList();
+}
+
+function renumberAfterReorder(){
+  const allSorted=[...S.teams].sort((a,b)=>a.order-b.order);
+  allSorted.forEach((t,i)=>{ t.order=i+1; });
+  saveState();
+  renderDrawPreview();
+  renderStartOrderList();
+  renderTeamList();
+  toast('🔢 Номерата са презаписани');
+}
+
+// ═══════════════════════════════════════
+// HISTORY / ARCHIVE
+// ═══════════════════════════════════════
+function archiveCurrentTournament(){
+  const ranked=S.teams.map(t=>({...t,...calcScore(t.id)})).filter(t=>t.total!==null);
+  if(!ranked.length){toast('⚠️ Няма финализирани резултати за архивиране','var(--red)');return;}
+  if(!confirm('Архивирай текущия турнир в историята?')) return;
+
+  const history=loadHistory();
+  const archive={
+    id:'arch_'+Date.now(),
+    compName:S.compName||'Без наименование',
+    compDate:S.compDate||new Date().toISOString().split('T')[0],
+    compPlace:S.compPlace||'',
+    archivedAt:new Date().toISOString(),
+    entries:[...(S.entries||[])],
+    teams:[...S.teams],
+    scores:JSON.parse(JSON.stringify(S.scores)),
+    finalized:{...S.finalized},
+    results:ranked.sort((a,b)=>b.total-a.total),
+  };
+  history.unshift(archive);  // newest first
+  saveHistory(history);
+  toast('📦 Турнирът е архивиран!','var(--gold)');
+  renderHistory();
+}
+
+function deleteArchive(id){
+  if(!confirm('Изтриване на архива?')) return;
+  const h=loadHistory().filter(a=>a.id!==id);
+  saveHistory(h);
+  renderHistory();
+  toast('🗑 Архивът е изтрит');
+}
+
+function renderHistory(){
+  const history=loadHistory();
+  const el=document.getElementById('history-list');
+  if(!el) return;
+  if(!history.length){
+    el.innerHTML=`<div class="card" style="text-align:center;padding:32px">
+      <div style="font-size:36px;margin-bottom:10px">📭</div>
+      <div style="color:var(--muted);font-size:14px">Няма архивирани турнири</div>
+      <div style="color:var(--muted);font-size:12px;margin-top:6px">Натисни „Архивирай текущия турнир" след финализиране</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML=history.map(a=>`
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;color:var(--text)">${a.compName}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">
+            📅 ${a.compDate} &nbsp;·&nbsp; 📍 ${a.compPlace||'—'} &nbsp;·&nbsp;
+            <span style="color:var(--muted)">Архивиран: ${new Date(a.archivedAt).toLocaleString('bg-BG',{day:'2-digit',month:'short',year:'numeric'})}</span>
+          </div>
+          <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
+            <span class="pill pp">${a.teams.length} отбора</span>
+            <span class="pill" style="background:rgba(245,158,11,.2);color:var(--gold)">${(a.entries||[]).length} заявки</span>
+            <span class="pill" style="background:rgba(16,185,129,.2);color:var(--green)">${Object.values(a.finalized||{}).filter(Boolean).length} финализирани</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="toggleArchiveDetails('${a.id}')">👁 Детайли</button>
+          <button class="btn btn-gold btn-sm" onclick="printArchive('${a.id}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="deleteArchive('${a.id}')">🗑</button>
+        </div>
+      </div>
+
+      <!-- Collapsed details -->
+      <div id="arch-details-${a.id}" style="display:none">
+        <hr style="margin:10px 0">
+        ${renderArchiveDetails(a)}
+      </div>
+    </div>`).join('');
+}
+
+function toggleArchiveDetails(id){
+  const el=document.getElementById('arch-details-'+id);
+  if(el) el.style.display=el.style.display==='none'?'block':'none';
+}
+
+function renderArchiveDetails(a){
+  const cats=[...new Set(a.teams.map(t=>t.cat))];
+  return cats.map(cat=>{
+    const teams=a.results.filter(t=>t.cat===cat).sort((x,y)=>y.total-x.total);
+    if(!teams.length) return '';
+    const medal=['🥇','🥈','🥉'];
+    const profile=getCatProfile(cat);
+    const rows=teams.map((t,i)=>`
+      <tr>
+        <td style="text-align:center;padding:5px 8px;font-size:${i<3?'16px':'12px'}">${i<3?medal[i]:i+1}</td>
+        <td style="padding:5px 10px">
+          <div style="font-size:12px;font-weight:600">${t.name}</div>
+          <div style="font-size:10px;color:var(--muted)">${t.club}</div>
+        </td>
+        ${profile.map(type=>`<td style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:var(--muted);padding:5px 6px">${t.parts&&t.parts[type]!=null?t.parts[type].toFixed(3):'—'}</td>`).join('')}
+        <td style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--accent2);padding:5px 8px">${t.total!=null?t.total.toFixed(3):'—'}</td>
+      </tr>`).join('');
+    return `<div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">${cat}</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <thead><tr style="border-bottom:2px solid var(--border)">
+            <th style="padding:4px 8px;text-align:center;color:var(--muted);font-size:10px">№</th>
+            <th style="padding:4px 10px;text-align:left;color:var(--muted);font-size:10px">ОТБОР</th>
+            ${profile.map(p=>`<th style="padding:4px 6px;text-align:center;color:var(--muted);font-size:10px">${SCORE_CFG[p].label}</th>`).join('')}
+            <th style="padding:4px 8px;text-align:center;color:var(--accent2);font-size:10px">ОБЩО</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function printArchive(id){
+  const a=loadHistory().find(x=>x.id===id);
+  if(!a){toast('⚠️ Не е намерен архив','var(--red)');return;}
+
+  const cats=[...new Set(a.teams.map(t=>t.cat))];
+  const medal=['🥇','🥈','🥉'];
+  const now=new Date().toLocaleString('bg-BG',{day:'2-digit',month:'long',year:'numeric'});
+
+  const tableHTML=cats.map(cat=>{
+    const teams=a.results.filter(t=>t.cat===cat).sort((x,y)=>y.total-x.total);
+    if(!teams.length) return '';
+    const profile=getCatProfile(cat);
+    const catColors={'6-8':'#dbeafe','8-10':'#d1fae5','10-12':'#ede9fe','12-14':'#fce7f3','Девойки':'#fef3c7','Жени':'#fee2e2','Open':'#f1f5f9'};
+    const catTxt={'6-8':'#1d4ed8','8-10':'#065f46','10-12':'#5b21b6','12-14':'#9d174d','Девойки':'#92400e','Жени':'#991b1b','Open':'#475569'};
+    const rows=teams.map((t,i)=>{
+      const rowBg=i===0?'#fffbeb':i===1?'#f8fafc':i===2?'#fdf6ee':'#fff';
+      return `<tr style="background:${rowBg};border-bottom:1px solid #f1f5f9">
+        <td style="text-align:center;padding:7px 6px;font-size:${i<3?'18px':'13px'}">${i<3?medal[i]:i+1}</td>
+        <td style="padding:7px 10px"><div style="font-weight:700;font-size:12px">${t.name}</div><div style="font-size:10px;color:#94a3b8">${t.club}</div></td>
+        ${profile.map(type=>`<td style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#475569;padding:7px 5px">${t.parts&&t.parts[type]!=null?t.parts[type].toFixed(3):'—'}</td>`).join('')}
+        <td style="text-align:center;font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#7c3aed;background:rgba(124,58,237,.05);padding:7px 5px">${t.total!=null?t.total.toFixed(3):'—'}</td>
+      </tr>`;
+    }).join('');
+    return `<div style="margin-bottom:18px">
+      <div style="background:${catColors[cat]||'#f8fafc'};color:${catTxt[cat]||'#1e293b'};padding:7px 14px;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-radius:6px;margin-bottom:6px">▸ ${cat}</div>
+      <table style="width:100%;border-collapse:collapse;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+        <thead><tr>
+          <th style="background:#1e293b;color:#fff;padding:8px 6px;text-align:center;font-size:10px;width:36px">№</th>
+          <th style="background:#1e293b;color:#fff;padding:8px 10px;text-align:left;font-size:10px">ОТБОР / КЛУБ</th>
+          ${profile.map(p=>`<th style="background:${p==='TV'?'#fef9c3':p==='AV'||p==='AVA'?'#dbeafe':p==='AVB'?'#dcfce7':'#fce7f3'};color:${p==='TV'?'#a16207':p==='AV'||p==='AVA'?'#1e40af':p==='AVB'?'#166534':'#9d174d'};padding:8px 6px;text-align:center;font-size:10px;font-weight:700">${SCORE_CFG[p].label}</th>`).join('')}
+          <th style="background:#7c3aed;color:#fff;padding:8px 6px;text-align:center;font-size:10px;font-weight:700">ОБЩО</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  }).join('');
+
+  const html=`<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<title>${a.compName} – Резултати</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0f172a;padding:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@page{size:A4 portrait;margin:12mm}
+@media print{.no-print{display:none!important}}
+.hdr{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:16px 20px;border-radius:10px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.hdr-logo{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:3px;opacity:.9}
+.hdr-logo span{color:#f59e0b}
+.hdr-r{text-align:right}
+.hdr-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700}
+.hdr-sub{font-size:11px;opacity:.8;margin-top:2px}
+.print-btn{display:flex;align-items:center;gap:8px;margin:0 auto 12px;padding:10px 22px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+.footer{text-align:center;font-size:9px;color:#94a3b8;margin-top:12px;padding-top:6px;border-top:1px solid #f1f5f9}
+</style></head><body>
+<button class="print-btn no-print" onclick="window.print()">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  Принтирай / Запази като PDF
+</button>
+<div class="hdr">
+  <div class="hdr-logo">AGG<span>·</span>SCORE</div>
+  <div class="hdr-r">
+    <div class="hdr-title">${a.compName}</div>
+    <div class="hdr-sub">📍 ${a.compPlace||'—'} &nbsp;·&nbsp; 📅 ${a.compDate}</div>
+    <div class="hdr-sub" style="opacity:.6">Архивиран: ${new Date(a.archivedAt).toLocaleDateString('bg-BG')}</div>
+  </div>
+</div>
+${tableHTML}
+<div class="footer">AGG Score · ${a.compName} · ${a.compDate}</div>
+</body></html>`;
+
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  toast('🖨 PDF отворен');
+}
+
+// ═══════════════════════════════════════
+// RENDER ALL
+function renderAll(){
+  renderCtrlRotations();
+  renderCurrentChips();
+  renderStartOrderList();
+  renderTeamList();
+  updateSelects();
+  renderLive();
+  renderEntries();
+  updateEntryCatFilter();
+  renderRotationList();
+  renderRotationCatSelect();
+  renderDrawPreview();
+  if(!S.rotations) S.rotations=[];
+}
+
+// ═══════════════════════════════════════
+// INIT
+document.getElementById('comp-date').valueAsDate=new Date();
+document.getElementById('comp-name').value=S.compName;
+document.getElementById('comp-date').value=S.compDate||(new Date().toISOString().split('T')[0]);
+document.getElementById('comp-place').value=S.compPlace;
+if(!S.entries) S.entries=[];
+if(!S.rotations) S.rotations=[];
+// Pre-fill sync settings
+if(SYNC.supabaseUrl) document.getElementById('sb-url').value=SYNC.supabaseUrl;
+if(SYNC.supabaseKey) document.getElementById('sb-key').value=SYNC.supabaseKey;
+const _savedJudgeUrl=localStorage.getItem('agg_judge_url_override')||'';
+if(_savedJudgeUrl) document.getElementById('judge-url-override').value=_savedJudgeUrl;
+updateSyncBadge();
+renderAll();
+updateJudgeURL();
+// Pre-fetch server IP for QR codes
+if(location.protocol!=='file:') fetchServerIP();
+</script>
+</body>
+</html>
